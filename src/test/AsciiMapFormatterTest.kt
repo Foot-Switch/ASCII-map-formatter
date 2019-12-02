@@ -13,8 +13,8 @@ class AsciiMapFormatterTest {
 
     @Test
     fun throwExceptionForEmptyInput() {
-        exceptionRule.expectMessage(AsciiMapFormatter.EMPTY_INPUT_ERROR_MESSAGE)
-        AsciiMapFormatter.formatAsciiMapItems(AsciiMapTestData.emptyInput)
+        exceptionRule.expectMessage(AsciiMapTestData.EMPTY_INPUT_ERROR_MESSAGE)
+        AsciiMapFormatter.formatAsciiMapItems(AsciiMapTestData.emptyMap)
     }
 
     @Test

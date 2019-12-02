@@ -1,10 +1,30 @@
 import main.AsciiMap
 import main.AsciiMapFormatter
 import main.AsciiMapTestData
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 import kotlin.test.assertEquals
 
 class AsciiMapTest {
+
+    @Rule
+    @JvmField
+    var exceptionRule: ExpectedException = ExpectedException.none()
+
+    @Test
+    fun throwExceptionWhenNoStartCharacterIsPresent() {
+        exceptionRule.expectMessage(AsciiMapTestData.NO_START_CHARACTER_ERROR_MESSAGE)
+        val asciiMap = AsciiMap(AsciiMapTestData.mapWithoutStart)
+        asciiMap.getOutput()
+    }
+
+    @Test
+    fun throwExceptionWhenNoEndCharacterIsPresent() {
+        exceptionRule.expectMessage(AsciiMapTestData.NO_END_CHARACTER_ERROR_MESSAGE)
+        val asciiMap = AsciiMap(AsciiMapTestData.mapWithoutEnd)
+        asciiMap.getOutput()
+    }
 
     @Test
     fun constructorShouldCallFormatter() {

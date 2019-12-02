@@ -1,14 +1,11 @@
 package main
 
-
 object AsciiMapFormatter {
-
-    const val EMPTY_INPUT_ERROR_MESSAGE = "Input cannot be empty"
 
     fun formatAsciiMapItems(asciiMap: String): List<AsciiMapItem> {
         val rowsWithData = removeBlankRows(asciiMap)
         val asciiMapItems = mutableListOf<AsciiMapItem>()
-        if (rowsWithData.isEmpty()) throw Exception(EMPTY_INPUT_ERROR_MESSAGE)
+        if (rowsWithData.isEmpty()) throw Exception(AsciiMapTestData.EMPTY_INPUT_ERROR_MESSAGE)
         else {
             val rowsWithDataWithoutEmptyLeadingColumns = removeEmptyLeadingColumns(rowsWithData)
             val rowsWithAddedTrailingSpacesToMatchLongestRow = addTrailingSpacesToMatchLongestRow(rowsWithDataWithoutEmptyLeadingColumns)
