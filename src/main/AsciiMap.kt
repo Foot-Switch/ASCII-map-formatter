@@ -48,7 +48,8 @@ class AsciiMap(asciiMap: String) {
             asciiMapItem != null &&
                     (asciiMapItem.character == pathCharacterHorizontal
                             || asciiMapItem.character == pathCharacterVertical
-                            || asciiMapItem.character.single().isLetter())
+                            || asciiMapItem.character.single().isLetter()
+                            || asciiMapItem.character == pathCharacterJunction)
 
 
     private fun buildOutput(): AsciiMapOutput {
