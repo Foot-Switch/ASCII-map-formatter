@@ -46,6 +46,5 @@ object AsciiMapFormatter {
         return asciiMapItems
     }
 
-    private fun longestRowLength(rows: List<String>) =
-            rows.maxBy { it.length }!!.trimEnd().length
+    private fun longestRowLength(rows: List<String>) = rows.maxBy { it.length }!!.length
 }
