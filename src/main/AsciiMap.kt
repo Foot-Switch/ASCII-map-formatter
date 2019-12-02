@@ -44,8 +44,7 @@ class AsciiMap(asciiMap: String) {
         return nextItem
     }
 
-    private fun pathBreaks(adjacentItems: List<AsciiMapItem?>) =
-            adjacentItems.find { it != null || it?.character != " " } == null
+    private fun pathBreaks(adjacentItems: List<AsciiMapItem?>) = adjacentItems.find { isPathItem(it) } == null
 
     private fun isPathItem(asciiMapItem: AsciiMapItem?) =
             asciiMapItem != null &&
