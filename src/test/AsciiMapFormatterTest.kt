@@ -1,5 +1,8 @@
 import main.AsciiMapFormatter
 import main.AsciiMapTestData
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.ExpectedException
 import kotlin.test.assertEquals
 
 class AsciiMapFormatterTest {

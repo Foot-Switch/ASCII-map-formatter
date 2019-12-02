@@ -1,6 +1,7 @@
 import main.AsciiMap
 import main.AsciiMapFormatter
 import main.AsciiMapTestData
+import org.junit.Test
 import kotlin.test.assertEquals
 
 class AsciiMapTest {
