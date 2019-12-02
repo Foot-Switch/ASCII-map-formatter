@@ -30,7 +30,7 @@ class AsciiMapTest {
     @Test
     fun throwExceptionWhenMapIsImproperlyFormatted() {
         exceptionRule.expectMessage(AsciiMapTestData.formatPositionError(AsciiMapItem(" ", 0, 1)))
-        val asciiMap = AsciiMap(AsciiMapTestData.improperlyFormattedMap)
+        val asciiMap = AsciiMap(AsciiMapTestData.brokenPathMap)
         asciiMap.getOutput()
     }
 
