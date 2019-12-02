@@ -5,6 +5,9 @@ class AsciiMap(asciiMap: String) {
 
     private val startCharacter = "@"
     private val endCharacter = "x"
+    private val pathCharacterHorizontal = "-"
+    private val pathCharacterVertical = "|"
+    private val pathCharacterJunction = "+"
 
     val items: List<AsciiMapItem> = AsciiMapFormatter.formatAsciiMapItems(asciiMap)
 
@@ -23,12 +26,30 @@ class AsciiMap(asciiMap: String) {
 
     private fun buildPath(startItem: AsciiMapItem) {
         path += startItem
-        path += getNextCharacter(startItem)
+        appendNextCharacter(startItem)
     }
 
-    private fun getNextCharacter(currentItem: AsciiMapItem): String {
-        return ""
+    private fun appendNextCharacter(currentItem: AsciiMapItem) {
+        if (currentItem.character == "x") return
+        val nextItem = findNextItem(currentItem)
+        path += nextItem.character
+        appendNextCharacter(nextItem)
     }
+
+    private fun findNextItem(currentItem: AsciiMapItem): AsciiMapItem {
+        val leftItem = items.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex - 1 }
+        val topItem = items.find { it.rowIndex == currentItem.rowIndex - 1 && it.columnIndex == currentItem.columnIndex }
+        val righItem = items.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex + 1 }
+        val bottomItem = items.find { it.rowIndex == currentItem.rowIndex + 1 && it.columnIndex == currentItem.columnIndex }
+        return currentItem
+    }
+
+    private fun isPathItem(asciiMapItem: AsciiMapItem?) =
+            asciiMapItem != null &&
+                    (asciiMapItem.character == pathCharacterHorizontal
+                            || asciiMapItem.character == pathCharacterVertical
+                            || asciiMapItem.character.single().isLetter())
+
 
     private fun buildOutput(): AsciiMapOutput {
         var uppercaseLetters = ""
