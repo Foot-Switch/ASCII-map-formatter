@@ -21,13 +21,13 @@ class AsciiMap(asciiMap: String) {
         return buildOutput()
     }
 
-    private fun getNextCharacter(currentItem: AsciiMapItem): String {
-        return ""
-    }
-
     private fun buildPath(startItem: AsciiMapItem) {
         path += startItem
         path += getNextCharacter(startItem)
+    }
+
+    private fun getNextCharacter(currentItem: AsciiMapItem): String {
+        return ""
     }
 
     private fun buildOutput(): AsciiMapOutput {
