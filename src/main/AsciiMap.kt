@@ -39,7 +39,7 @@ class AsciiMap(asciiMap: String) {
         val bottomItem = items.find { it.rowIndex == currentItem.rowIndex + 1 && it.columnIndex == currentItem.columnIndex }
         val adjacentItems = listOf(leftItem, topItem, rightItem, bottomItem)
         when {
-            pathBreaks(adjacentItems) -> throw Exception(AsciiMapTestData.IMPROPERLY_FORMATTED_MAP_ERROR_MESSAGE)
+            pathBreaks(adjacentItems) -> throw Exception(AsciiMapTestData.formatPositionError(currentItem))
         }
         return nextItem
     }

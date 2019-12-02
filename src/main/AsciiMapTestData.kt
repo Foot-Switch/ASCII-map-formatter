@@ -3,7 +3,7 @@ package main
 
 object AsciiMapTestData {
 
-    const val positionPlaceholder = "{position}"
+    private const val positionPlaceholder = "{position}"
 
     const val EMPTY_INPUT_ERROR_MESSAGE = "Input cannot be empty"
     const val NO_START_CHARACTER_ERROR_MESSAGE = "Input must have exactly one start character marked with \"@\"."
@@ -21,6 +21,9 @@ object AsciiMapTestData {
                     "  x-B-+   C\n" +
                     "      |   |\n" +
                     "      +---+"
+
+    fun formatPositionError(asciiMapItem: AsciiMapItem) =
+            IMPROPERLY_FORMATTED_MAP_ERROR_MESSAGE.replace(positionPlaceholder, "[${asciiMapItem.rowIndex},${asciiMapItem.rowIndex}]")
 
     val expectedItemsOne = listOf(
             AsciiMapItem("@", 0, 0),

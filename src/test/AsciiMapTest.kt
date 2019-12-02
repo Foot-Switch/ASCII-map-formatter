@@ -1,5 +1,6 @@
 import main.AsciiMap
 import main.AsciiMapFormatter
+import main.AsciiMapItem
 import main.AsciiMapTestData
 import org.junit.Rule
 import org.junit.Test
@@ -28,7 +29,7 @@ class AsciiMapTest {
 
     @Test
     fun throwExceptionWhenMapIsImproperlyFormatted() {
-        exceptionRule.expectMessage(AsciiMapTestData.IMPROPERLY_FORMATTED_MAP_ERROR_MESSAGE)
+        exceptionRule.expectMessage(AsciiMapTestData.formatPositionError(AsciiMapItem(" ", 0, 1)))
         val asciiMap = AsciiMap(AsciiMapTestData.improperlyFormattedMap)
         asciiMap.getOutput()
     }
