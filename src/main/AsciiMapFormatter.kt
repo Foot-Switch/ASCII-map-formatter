@@ -3,7 +3,6 @@ package main
 
 object AsciiMapFormatter {
 
-    private const val newlineCharLength = 1
     const val EMPTY_INPUT_ERROR_MESSAGE = "Input cannot be empty"
 
     fun formatAsciiMapItems(asciiMap: String): List<AsciiMapItem> {
@@ -48,5 +47,5 @@ object AsciiMapFormatter {
     }
 
     private fun longestRowLength(rows: List<String>) =
-            rows.maxBy { it.length }!!.trimEnd().length - newlineCharLength
+            rows.maxBy { it.length }!!.trimEnd().length
 }

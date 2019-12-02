@@ -6,7 +6,7 @@ object AsciiMapTestData {
     const val emptyInput = ""
 
     const val mapOne =
-            " @---A---+\n" +
+            "  @---A---+\n" +
                     "          |\n" +
                     "  x-B-+   C\n" +
                     "      |   |\n" +
@@ -39,6 +39,7 @@ object AsciiMapTestData {
             AsciiMapItem(" ", 2, 5),
             AsciiMapItem(" ", 2, 6),
             AsciiMapItem(" ", 2, 7),
+            AsciiMapItem("C", 2, 8),
             AsciiMapItem(" ", 3, 0),
             AsciiMapItem(" ", 3, 1),
             AsciiMapItem(" ", 3, 2),
