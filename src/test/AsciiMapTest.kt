@@ -27,6 +27,13 @@ class AsciiMapTest {
     }
 
     @Test
+    fun throwExceptionWhenMapIsImproperlyFormatted() {
+        exceptionRule.expectMessage(AsciiMapTestData.IMPROPERLY_FORMATTED_MAP_ERROR_MESSAGE)
+        val asciiMap = AsciiMap(AsciiMapTestData.improperlyFormattedMap)
+        asciiMap.getOutput()
+    }
+
+    @Test
     fun constructorShouldCallFormatter() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapOne)
         assertEquals(AsciiMapFormatter.formatAsciiMapItems(AsciiMapTestData.mapOne), asciiMap.items)
