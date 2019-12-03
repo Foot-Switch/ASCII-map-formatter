@@ -77,7 +77,7 @@ class AsciiMap(asciiMap: String) {
     }
 
     private fun cornerIsAmbiguous(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): Boolean {
-        return currentItem.character == pathCharacterCorner && nextItemCandidates.size != unambiguousNumberOfNextItemCandidates
+        return currentItem.character == pathCharacterCorner && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
     }
 
     private fun getOnlyRemainingNextStepCandidate(nextItemCandidates: List<AsciiMapItem>) = nextItemCandidates[0]
