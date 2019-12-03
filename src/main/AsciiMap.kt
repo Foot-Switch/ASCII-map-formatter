@@ -2,8 +2,8 @@ package main
 
 import main.AsciiMapErrorFormatter.NO_END_CHARACTER_ERROR_MESSAGE
 import main.AsciiMapErrorFormatter.NO_START_CHARACTER_ERROR_MESSAGE
-import main.AsciiMapErrorFormatter.formatPathAmbiguityError
-import main.AsciiMapErrorFormatter.formatPathBreakError
+import main.AsciiMapErrorFormatter.formatPathAmbiguityErrorMessage
+import main.AsciiMapErrorFormatter.formatPathBreakErrorMessage
 
 
 class AsciiMap(asciiMap: String) {
@@ -42,49 +42,44 @@ class AsciiMap(asciiMap: String) {
         val topItem = items.find { it.rowIndex == currentItem.rowIndex - 1 && it.columnIndex == currentItem.columnIndex }
         val rightItem = items.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex + 1 }
         val bottomItem = items.find { it.rowIndex == currentItem.rowIndex + 1 && it.columnIndex == currentItem.columnIndex }
-        val adjacentItems = mutableListOf(leftItem, topItem, rightItem, bottomItem)
-        adjacentItems.removeIf { itemsHaveSamePosition(it, previousItem) }
+        val allAdjacentItems = mutableListOf(leftItem, topItem, rightItem, bottomItem)
+        val nextItemCandidates = removeInvalidItemsFromAdjacentItems(allAdjacentItems, previousItem)
         nextItem = when {
-            pathBreaks(adjacentItems) -> throw Exception(formatPathBreakError(currentItem))
-            pathIsAmbiguous(currentItem, adjacentItems) -> throw Exception(formatPathAmbiguityError(currentItem))
-            isPassThroughHorizontal(previousItem, leftItem, topItem, rightItem, bottomItem) -> if (itemsHaveSamePosition(previousItem, rightItem)) leftItem else rightItem
-            isPassThroughVertical(previousItem, leftItem, topItem, rightItem, bottomItem) -> if (itemsHaveSamePosition(previousItem, topItem)) bottomItem else topItem
-            else -> adjacentItems.find { isValidPathCharacter(it) }
+            nextItemCandidates.isEmpty() -> throw Exception(formatPathBreakErrorMessage(currentItem))
+            junctionIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
+            isCrossingWithoutJunction(currentItem, previousItem, leftItem, topItem, rightItem, bottomItem) -> null
+            else -> nextItemCandidates[0]
         }
         return nextItem
     }
 
-    private fun isValidPathCharacter(it: AsciiMapItem?) = it != null && it.character.isNotBlank()
+    private fun removeInvalidItemsFromAdjacentItems(allAdjacentItems: List<AsciiMapItem?>, previousItem: AsciiMapItem?): List<AsciiMapItem> {
+        val nextItemCandidates = mutableListOf<AsciiMapItem>()
+        allAdjacentItems.forEach { adjacentItem -> if (isPathItem(adjacentItem)) nextItemCandidates.add(adjacentItem!!) }
+        nextItemCandidates.removeIf { itemsHaveSamePosition(it, previousItem) }
+        return nextItemCandidates
+    }
 
     private fun itemsHaveSamePosition(itemOne: AsciiMapItem?, itemTwo: AsciiMapItem?) =
             itemOne?.rowIndex == itemTwo?.rowIndex && itemOne?.columnIndex == itemTwo?.columnIndex
 
-    private fun pathBreaks(adjacentItems: List<AsciiMapItem?>) = adjacentItems.find { isPathItem(it) } == null
+    private fun junctionIsAmbiguous(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): Boolean {
+        return currentItem.character == pathCharacterJunction && nextItemCandidates.size > 1
+    }
 
-    private fun pathIsAmbiguous(currentItem: AsciiMapItem, adjacentItems: List<AsciiMapItem?>): Boolean {
-        // TODO: handle ambiguous cases
+    private fun isCrossingWithoutJunction(currentItem: AsciiMapItem?,
+                                          previousItem: AsciiMapItem?,
+                                          leftItem: AsciiMapItem?,
+                                          topItem: AsciiMapItem?,
+                                          rightItem: AsciiMapItem?,
+                                          bottomItem: AsciiMapItem?): Boolean {
         return false
     }
 
-    private fun isPassThroughHorizontal(previousItem: AsciiMapItem?, leftItem: AsciiMapItem?, topItem: AsciiMapItem?, rightItem: AsciiMapItem?, bottomItem: AsciiMapItem?) =
-            isValidPathCharacter(leftItem) && isValidPathCharacter(rightItem) &&
-                    topItem?.character == pathCharacterVertical && bottomItem?.character == pathCharacterVertical &&
-                    enteredHorizontally(previousItem, leftItem, rightItem)
-
-    private fun enteredHorizontally(previousItem: AsciiMapItem?, leftItem: AsciiMapItem?, rightItem: AsciiMapItem?) =
-            itemsHaveSamePosition(leftItem, previousItem) || itemsHaveSamePosition(rightItem, previousItem)
-
-    private fun isPassThroughVertical(previousItem: AsciiMapItem?, leftItem: AsciiMapItem?, topItem: AsciiMapItem?, rightItem: AsciiMapItem?, bottomItem: AsciiMapItem?) =
-            isValidPathCharacter(topItem) && isValidPathCharacter(bottomItem) &&
-                    leftItem?.character == pathCharacterHorizontal && rightItem?.character == pathCharacterHorizontal &&
-                    enteredVertically(previousItem, topItem, bottomItem)
-
-    private fun enteredVertically(previousItem: AsciiMapItem?, topItem: AsciiMapItem?, bottomItem: AsciiMapItem?) =
-            itemsHaveSamePosition(topItem, previousItem) || itemsHaveSamePosition(bottomItem, previousItem)
-
     private fun isPathItem(asciiMapItem: AsciiMapItem?) =
             asciiMapItem != null &&
-                    (asciiMapItem.character == pathCharacterHorizontal || asciiMapItem.character == pathCharacterVertical
+                    (asciiMapItem.character == pathCharacterHorizontal
+                            || asciiMapItem.character == pathCharacterVertical
                             || asciiMapItem.character.single().isLetter()
                             || asciiMapItem.character == pathCharacterJunction
                             || asciiMapItem.character == endCharacter)

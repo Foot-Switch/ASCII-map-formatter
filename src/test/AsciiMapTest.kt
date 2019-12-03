@@ -1,7 +1,7 @@
 import main.*
 import main.AsciiMapErrorFormatter.NO_END_CHARACTER_ERROR_MESSAGE
 import main.AsciiMapErrorFormatter.NO_START_CHARACTER_ERROR_MESSAGE
-import main.AsciiMapErrorFormatter.formatPathBreakError
+import main.AsciiMapErrorFormatter.formatPathBreakErrorMessage
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
@@ -29,14 +29,14 @@ class AsciiMapTest {
 
     @Test
     fun throwExceptionWhenPathBreaks() {
-        exceptionRule.expectMessage(formatPathBreakError(AsciiMapItem("@", 0, 0)))
+        exceptionRule.expectMessage(formatPathBreakErrorMessage(AsciiMapItem("@", 0, 0)))
         val asciiMap = AsciiMap(AsciiMapTestData.brokenPathMap)
         asciiMap.formatOutput()
     }
 
 //    @Test
 //    fun throwExceptionWhenPathIsAmbiguous() {
-//        exceptionRule.expectMessage(formatPathAmbiguityError(AsciiMapItem("@", 0, 2)))
+//        exceptionRule.expectMessage(formatPathAmbiguityErrorMessage(AsciiMapItem("@", 0, 2)))
 //        val asciiMap = AsciiMap(AsciiMapTestData.ambiguousMap)
 //        asciiMap.formatOutput()
 //    }

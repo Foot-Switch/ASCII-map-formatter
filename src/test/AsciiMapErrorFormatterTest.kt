@@ -9,14 +9,14 @@ class AsciiMapErrorFormatterTest {
     @Test
     fun formatPathBreakError() {
         val asciiMapItem = AsciiMapItem("a", 0, 0)
-        val errorMessage = AsciiMapErrorFormatter.formatPathBreakError(asciiMapItem)
+        val errorMessage = AsciiMapErrorFormatter.formatPathBreakErrorMessage(asciiMapItem)
         assertEquals("The path breaks on character [${asciiMapItem.character}] at position [${asciiMapItem.rowIndex}, ${asciiMapItem.columnIndex}] because no adjacent items are part of a valid path.", errorMessage)
     }
 
     @Test
     fun formatPathAmbiguityError() {
         val asciiMapItem = AsciiMapItem("a", 0, 0)
-        val errorMessage = AsciiMapErrorFormatter.formatPathAmbiguityError(asciiMapItem)
+        val errorMessage = AsciiMapErrorFormatter.formatPathAmbiguityErrorMessage(asciiMapItem)
         assertEquals("The path breaks on character [${asciiMapItem.character}] at position [${asciiMapItem.rowIndex}, ${asciiMapItem.columnIndex}] because adjacent items describe an ambiguous path.", errorMessage)
     }
 }

@@ -156,8 +156,8 @@ object AsciiMapTestData {
             "\n" +
                     "  @---+\n" +
                     "      B\n" +
-                    "K-----|--A\n" +
-                    "|     |  |\n" +
+                    "K----A|A-A\n" +
+                    "|     A  |\n" +
                     "|  +--E  |\n" +
                     "|  |     |\n" +
                     "+--E--Ex C\n" +
