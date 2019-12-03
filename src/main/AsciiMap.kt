@@ -18,7 +18,7 @@ class AsciiMap(asciiMap: String) {
 
     private val pathItems = mutableListOf<AsciiMapItem>()
 
-    fun getOutput(): AsciiMapOutput {
+    fun formatOutput(): AsciiMapOutput {
         val startItem = items.find { it.character == startCharacter }
         val endItem = items.find { it.character == endCharacter }
         when {
