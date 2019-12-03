@@ -23,6 +23,7 @@ class AsciiMap(asciiMap: String) {
     private val pathItems = mutableListOf<AsciiMapItem>()
 
     fun getOutput(): AsciiMapOutput {
+        pathItems.clear()
         val startItem = items.find { it.character == startCharacter }
         val endItem = items.find { it.character == endCharacter }
         when {
