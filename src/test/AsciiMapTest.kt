@@ -1,6 +1,7 @@
 import main.*
 import main.AsciiMapErrorFormatter.NO_END_CHARACTER_ERROR_MESSAGE
 import main.AsciiMapErrorFormatter.NO_START_CHARACTER_ERROR_MESSAGE
+import main.AsciiMapErrorFormatter.formatPathAmbiguityErrorMessage
 import main.AsciiMapErrorFormatter.formatPathBreakErrorMessage
 import org.junit.Rule
 import org.junit.Test
@@ -34,12 +35,12 @@ class AsciiMapTest {
         asciiMap.formatOutput()
     }
 
-//    @Test
-//    fun throwExceptionWhenPathIsAmbiguous() {
-//        exceptionRule.expectMessage(formatPathAmbiguityErrorMessage(AsciiMapItem("@", 0, 2)))
-//        val asciiMap = AsciiMap(AsciiMapTestData.ambiguousMap)
-//        asciiMap.formatOutput()
-//    }
+    @Test
+    fun throwExceptionWhenPathIsAmbiguous() {
+        exceptionRule.expectMessage(formatPathAmbiguityErrorMessage(AsciiMapItem("@", 0, 2)))
+        val asciiMap = AsciiMap(AsciiMapTestData.ambiguousMap)
+        asciiMap.formatOutput()
+    }
 
     @Test
     fun constructorShouldCallFormatter() {

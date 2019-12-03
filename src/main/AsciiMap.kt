@@ -14,6 +14,10 @@ class AsciiMap(asciiMap: String) {
     private val pathCharacterVertical = "|"
     private val pathCharacterJunction = "+"
 
+    private val unambiguousNumberOfNextItemCandidates = 1
+    private val ambiguousNumberOfNextItemCandidates = 2
+    private val maximumNumberOfNextItemCandidates = 3
+
     val items: List<AsciiMapItem> = AsciiMapItemFormatter.formatAsciiMapItems(asciiMap)
 
     private val pathItems = mutableListOf<AsciiMapItem>()
@@ -47,11 +51,14 @@ class AsciiMap(asciiMap: String) {
         nextItem = when {
             nextItemCandidates.isEmpty() -> throw Exception(formatPathBreakErrorMessage(currentItem))
             junctionIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
-            isCrossingWithoutJunction(currentItem, previousItem, leftItem, topItem, rightItem, bottomItem) -> null
+            isFullJunction(nextItemCandidates) -> findNextItemInFullJunction(previousItem, currentItem, nextItemCandidates)
             else -> nextItemCandidates[0]
         }
         return nextItem
     }
+
+    private fun isFullJunction(nextItemCandidates: List<AsciiMapItem>) =
+            nextItemCandidates.size == maximumNumberOfNextItemCandidates
 
     private fun removeInvalidItemsFromAdjacentItems(allAdjacentItems: List<AsciiMapItem?>, previousItem: AsciiMapItem?): List<AsciiMapItem> {
         val nextItemCandidates = mutableListOf<AsciiMapItem>()
@@ -64,17 +71,23 @@ class AsciiMap(asciiMap: String) {
             itemOne?.rowIndex == itemTwo?.rowIndex && itemOne?.columnIndex == itemTwo?.columnIndex
 
     private fun junctionIsAmbiguous(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): Boolean {
-        return currentItem.character == pathCharacterJunction && nextItemCandidates.size > 1
+        return (currentItem.character == pathCharacterJunction && nextItemCandidates.size != unambiguousNumberOfNextItemCandidates)
+                || (currentItem.character != pathCharacterJunction && nextItemCandidates.size == ambiguousNumberOfNextItemCandidates)
     }
 
-    private fun isCrossingWithoutJunction(currentItem: AsciiMapItem?,
-                                          previousItem: AsciiMapItem?,
-                                          leftItem: AsciiMapItem?,
-                                          topItem: AsciiMapItem?,
-                                          rightItem: AsciiMapItem?,
-                                          bottomItem: AsciiMapItem?): Boolean {
-        return false
+    private fun findNextItemInFullJunction(previousItem: AsciiMapItem?, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem {
+        return if (enteredHorizontally(currentItem, previousItem)) findNextHorizontalItem(nextItemCandidates, currentItem)
+        else findNextVerticalItem(nextItemCandidates, currentItem)
     }
+
+    private fun enteredHorizontally(currentItem: AsciiMapItem, previousItem: AsciiMapItem?) =
+            currentItem.rowIndex == previousItem?.rowIndex
+
+    private fun findNextHorizontalItem(nextItemCandidates: List<AsciiMapItem>, currentItem: AsciiMapItem) =
+            nextItemCandidates.find { it.columnIndex == currentItem.columnIndex + 1 }!!
+
+    private fun findNextVerticalItem(nextItemCandidates: List<AsciiMapItem>, currentItem: AsciiMapItem) =
+            nextItemCandidates.find { it.rowIndex == currentItem.rowIndex + 1 }!!
 
     private fun isPathItem(asciiMapItem: AsciiMapItem?) =
             asciiMapItem != null &&
