@@ -22,8 +22,8 @@ class AsciiMapReaderTest {
     }
 
     @Test
-    fun processAsciiMapFromFile() {
-        AsciiMapReader.processAsciiMapFromFile(testFilePath)
+    fun runMainMethod() {
+        AsciiMapReader.main(arrayOf(testFilePath))
         assertEquals("$LETTERS_PLACEHOLDER${expectedOutputTwo.letters}\n$PATH_AS_CHARACTERS_PLACEHOLDER${expectedOutputTwo.pathAsCharacters}", outContent.toString())
     }
 
