@@ -2,9 +2,9 @@ package main
 
 import main.AsciiMapErrorFormatter.EMPTY_INPUT_ERROR_MESSAGE
 
-object AsciiMapItemFormatter {
+object AsciiMapItemSerializer {
 
-    fun formatAsciiMapItems(asciiMap: String): List<AsciiMapItem> {
+    fun serializeAsciiMapItems(asciiMap: String): List<AsciiMapItem> {
         val rowsWithData = removeBlankRows(asciiMap)
         val asciiMapItems = mutableListOf<AsciiMapItem>()
         if (rowsWithData.isEmpty()) throw Exception(EMPTY_INPUT_ERROR_MESSAGE)

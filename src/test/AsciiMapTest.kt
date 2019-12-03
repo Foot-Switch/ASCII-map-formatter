@@ -41,7 +41,7 @@ class AsciiMapTest {
     @Test
     fun constructorShouldCallFormatter() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapOne)
-        assertEquals(AsciiMapItemFormatter.formatAsciiMapItems(AsciiMapTestData.mapOne), asciiMap.items)
+        assertEquals(AsciiMapItemSerializer.serializeAsciiMapItems(AsciiMapTestData.mapOne), asciiMap.items)
     }
 
     @Test

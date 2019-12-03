@@ -18,7 +18,7 @@ class AsciiMap(asciiMap: String) {
     private val ambiguousNumberOfNextItemCandidates = 2
     private val maximumNumberOfNextItemCandidates = 3
 
-    val items: List<AsciiMapItem> = AsciiMapItemFormatter.formatAsciiMapItems(asciiMap)
+    val items: List<AsciiMapItem> = AsciiMapItemSerializer.serializeAsciiMapItems(asciiMap)
 
     private val pathItems = mutableListOf<AsciiMapItem>()
     var output: AsciiMapOutput? = null

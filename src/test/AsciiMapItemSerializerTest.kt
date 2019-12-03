@@ -1,12 +1,12 @@
 import main.AsciiMapErrorFormatter.EMPTY_INPUT_ERROR_MESSAGE
-import main.AsciiMapItemFormatter
+import main.AsciiMapItemSerializer
 import main.AsciiMapTestData
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import kotlin.test.assertEquals
 
-class AsciiMapItemFormatterTest {
+class AsciiMapItemSerializerTest {
 
     @Rule
     @JvmField
@@ -15,21 +15,21 @@ class AsciiMapItemFormatterTest {
     @Test
     fun throwExceptionForEmptyInput() {
         exceptionRule.expectMessage(EMPTY_INPUT_ERROR_MESSAGE)
-        AsciiMapItemFormatter.formatAsciiMapItems(AsciiMapTestData.emptyMap)
+        AsciiMapItemSerializer.serializeAsciiMapItems(AsciiMapTestData.emptyMap)
     }
 
     @Test
     fun formatAsciiMapItemsOne() {
-        assertEquals(AsciiMapTestData.expectedItemsOne, AsciiMapItemFormatter.formatAsciiMapItems(AsciiMapTestData.mapOne))
+        assertEquals(AsciiMapTestData.expectedItemsOne, AsciiMapItemSerializer.serializeAsciiMapItems(AsciiMapTestData.mapOne))
     }
 
     @Test
     fun formatAsciiMapItemsTwo() {
-        assertEquals(AsciiMapTestData.expectedItemsTwo, AsciiMapItemFormatter.formatAsciiMapItems(AsciiMapTestData.mapTwo))
+        assertEquals(AsciiMapTestData.expectedItemsTwo, AsciiMapItemSerializer.serializeAsciiMapItems(AsciiMapTestData.mapTwo))
     }
 
     @Test
     fun formatAsciiMapItemsThree() {
-        assertEquals(AsciiMapTestData.expectedItemsThree, AsciiMapItemFormatter.formatAsciiMapItems(AsciiMapTestData.mapThree))
+        assertEquals(AsciiMapTestData.expectedItemsThree, AsciiMapItemSerializer.serializeAsciiMapItems(AsciiMapTestData.mapThree))
     }
 }
