@@ -18,28 +18,28 @@ class AsciiMapTest {
     fun throwExceptionWhenNoStartCharacterIsPresent() {
         exceptionRule.expectMessage(NO_START_CHARACTER_ERROR_MESSAGE)
         val asciiMap = AsciiMap(AsciiMapTestData.mapWithoutStart)
-        asciiMap.formatOutput()
+        asciiMap.getOutput()
     }
 
     @Test
     fun throwExceptionWhenNoEndCharacterIsPresent() {
         exceptionRule.expectMessage(NO_END_CHARACTER_ERROR_MESSAGE)
         val asciiMap = AsciiMap(AsciiMapTestData.mapWithoutEnd)
-        asciiMap.formatOutput()
+        asciiMap.getOutput()
     }
 
     @Test
     fun throwExceptionWhenPathBreaks() {
         exceptionRule.expectMessage(formatPathBreakErrorMessage(AsciiMapItem("@", 0, 0)))
         val asciiMap = AsciiMap(AsciiMapTestData.brokenPathMap)
-        asciiMap.formatOutput()
+        asciiMap.getOutput()
     }
 
     @Test
     fun throwExceptionWhenPathIsAmbiguous() {
         exceptionRule.expectMessage(formatPathAmbiguityErrorMessage(AsciiMapItem("@", 0, 2)))
         val asciiMap = AsciiMap(AsciiMapTestData.ambiguousMap)
-        asciiMap.formatOutput()
+        asciiMap.getOutput()
     }
 
     @Test
@@ -51,21 +51,21 @@ class AsciiMapTest {
     @Test
     fun formatOutputOne() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapOne)
-        val output = asciiMap.formatOutput()
+        val output = asciiMap.getOutput()
         assertEquals(AsciiMapTestData.expectedOutputOne, output)
     }
 
     @Test
     fun formatOutputTwo() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapTwo)
-        val output = asciiMap.formatOutput()
+        val output = asciiMap.getOutput()
         assertEquals(AsciiMapTestData.expectedOutputTwo, output)
     }
 
     @Test
     fun formatOutputThree() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapThree)
-        val output = asciiMap.formatOutput()
+        val output = asciiMap.getOutput()
         assertEquals(AsciiMapTestData.expectedOutputThree, output)
     }
 }

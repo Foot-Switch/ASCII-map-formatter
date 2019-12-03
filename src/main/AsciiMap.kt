@@ -22,7 +22,7 @@ class AsciiMap(asciiMap: String) {
 
     private val pathItems = mutableListOf<AsciiMapItem>()
 
-    fun formatOutput(): AsciiMapOutput {
+    fun getOutput(): AsciiMapOutput {
         val startItem = items.find { it.character == startCharacter }
         val endItem = items.find { it.character == endCharacter }
         when {
@@ -52,10 +52,12 @@ class AsciiMap(asciiMap: String) {
             nextItemCandidates.isEmpty() -> throw Exception(formatPathBreakErrorMessage(currentItem))
             junctionIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
             isFullJunction(nextItemCandidates) -> findNextItemInFullJunction(previousItem!!, currentItem, nextItemCandidates)
-            else -> nextItemCandidates[0]
+            else -> getOnlyRemainingNextStepCandidate(nextItemCandidates)
         }
         return nextItem
     }
+
+    private fun getOnlyRemainingNextStepCandidate(nextItemCandidates: List<AsciiMapItem>) = nextItemCandidates[0]
 
     private fun isFullJunction(nextItemCandidates: List<AsciiMapItem>) =
             nextItemCandidates.size == maximumNumberOfNextItemCandidates
