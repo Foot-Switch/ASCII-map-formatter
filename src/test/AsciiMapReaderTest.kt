@@ -2,8 +2,7 @@ import main.AsciiMapReader
 import main.AsciiMapReader.LETTERS_PLACEHOLDER
 import main.AsciiMapReader.PATH_AS_CHARACTERS_PLACEHOLDER
 import main.AsciiMapTestData.expectedOutputTwo
-import main.AsciiMapTestData.mapTwo
-import main.AsciiMapTestData.testFileName
+import main.AsciiMapTestData.testFilePath
 import org.junit.Test
 import kotlin.test.assertEquals
 import java.io.PrintStream
@@ -24,7 +23,7 @@ class AsciiMapReaderTest {
 
     @Test
     fun processAsciiMapFromFile() {
-        AsciiMapReader.processAsciiMapFromFile(testFileName)
+        AsciiMapReader.processAsciiMapFromFile(testFilePath)
         assertEquals("$LETTERS_PLACEHOLDER${expectedOutputTwo.letters}\n$PATH_AS_CHARACTERS_PLACEHOLDER${expectedOutputTwo.pathAsCharacters}", outContent.toString())
     }
 
