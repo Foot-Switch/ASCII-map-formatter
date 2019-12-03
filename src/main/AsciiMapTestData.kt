@@ -10,7 +10,8 @@ object AsciiMapTestData {
     const val ambiguousMap = "--@--"
 
     const val mapOne =
-            "  @---A---+\n" +
+            "\n" +
+                    "  @---A---+\n" +
                     "          |\n" +
                     "  x-B-+   C\n" +
                     "      |   |\n" +
@@ -67,7 +68,8 @@ object AsciiMapTestData {
     val expectedOutputOne = AsciiMapOutput("ACB", "@---A---+|C|+---+|+-B-x")
 
     const val mapTwo =
-            "  @\n" +
+            "\n" +
+                    "  @\n" +
                     "  | C----+\n" +
                     "  A |    |\n" +
                     "  +---B--+\n" +
@@ -151,7 +153,8 @@ object AsciiMapTestData {
     val expectedOutputTwo = AsciiMapOutput("ABCD", "@|A+---B--+|+----C|-||+---D--+|x")
 
     const val mapThree =
-            "  @---+\n" +
+            "\n" +
+                    "  @---+\n" +
                     "      B\n" +
                     "K-----|--A\n" +
                     "|     |  |\n" +
