@@ -16,7 +16,7 @@ class AsciiMap(asciiMap: String) {
 
     val items: List<AsciiMapItem> = AsciiMapItemFormatter.formatAsciiMapItems(asciiMap)
 
-    private var path = ""
+    private val pathItems = mutableListOf<AsciiMapItem>()
 
     fun getOutput(): AsciiMapOutput {
         val startItem = items.find { it.character == startCharacter }
@@ -30,7 +30,7 @@ class AsciiMap(asciiMap: String) {
     }
 
     private fun appendNextCharacter(previousItem: AsciiMapItem?, currentItem: AsciiMapItem) {
-        path += currentItem.character
+        pathItems.add(currentItem)
         if (currentItem.character == endCharacter) return
         val nextItem = findNextItem(previousItem, currentItem) ?: return
         appendNextCharacter(currentItem, nextItem)
@@ -43,24 +43,44 @@ class AsciiMap(asciiMap: String) {
         val rightItem = items.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex + 1 }
         val bottomItem = items.find { it.rowIndex == currentItem.rowIndex + 1 && it.columnIndex == currentItem.columnIndex }
         val adjacentItems = mutableListOf(leftItem, topItem, rightItem, bottomItem)
-        adjacentItems.removeIf { isPreviousItem(it, previousItem) }
-        when {
+        adjacentItems.removeIf { itemsHaveSamePosition(it, previousItem) }
+        nextItem = when {
             pathBreaks(adjacentItems) -> throw Exception(formatPathBreakError(currentItem))
             pathIsAmbiguous(currentItem, adjacentItems) -> throw Exception(formatPathAmbiguityError(currentItem))
-            else -> nextItem = adjacentItems.find { nextValidCharacter(it) }
+            isPassThroughHorizontal(previousItem, leftItem, topItem, rightItem, bottomItem) -> if (itemsHaveSamePosition(previousItem, rightItem)) leftItem else rightItem
+            isPassThroughVertical(previousItem, leftItem, topItem, rightItem, bottomItem) -> if (itemsHaveSamePosition(previousItem, topItem)) bottomItem else topItem
+            else -> adjacentItems.find { isValidPathCharacter(it) }
         }
         return nextItem
     }
 
-    private fun nextValidCharacter(it: AsciiMapItem?) = it != null && it.character.isNotBlank()
+    private fun isValidPathCharacter(it: AsciiMapItem?) = it != null && it.character.isNotBlank()
 
-    private fun isPreviousItem(itemOne: AsciiMapItem?, itemTwo: AsciiMapItem?) =
+    private fun itemsHaveSamePosition(itemOne: AsciiMapItem?, itemTwo: AsciiMapItem?) =
             itemOne?.rowIndex == itemTwo?.rowIndex && itemOne?.columnIndex == itemTwo?.columnIndex
 
     private fun pathBreaks(adjacentItems: List<AsciiMapItem?>) = adjacentItems.find { isPathItem(it) } == null
+
     private fun pathIsAmbiguous(currentItem: AsciiMapItem, adjacentItems: List<AsciiMapItem?>): Boolean {
+        // TODO: handle ambiguous cases
         return false
     }
+
+    private fun isPassThroughHorizontal(previousItem: AsciiMapItem?, leftItem: AsciiMapItem?, topItem: AsciiMapItem?, rightItem: AsciiMapItem?, bottomItem: AsciiMapItem?) =
+            isValidPathCharacter(leftItem) && isValidPathCharacter(rightItem) &&
+                    topItem?.character == pathCharacterVertical && bottomItem?.character == pathCharacterVertical &&
+                    enteredHorizontally(previousItem, leftItem, rightItem)
+
+    private fun enteredHorizontally(previousItem: AsciiMapItem?, leftItem: AsciiMapItem?, rightItem: AsciiMapItem?) =
+            itemsHaveSamePosition(leftItem, previousItem) || itemsHaveSamePosition(rightItem, previousItem)
+
+    private fun isPassThroughVertical(previousItem: AsciiMapItem?, leftItem: AsciiMapItem?, topItem: AsciiMapItem?, rightItem: AsciiMapItem?, bottomItem: AsciiMapItem?) =
+            isValidPathCharacter(topItem) && isValidPathCharacter(bottomItem) &&
+                    leftItem?.character == pathCharacterHorizontal && rightItem?.character == pathCharacterHorizontal &&
+                    enteredVertically(previousItem, topItem, bottomItem)
+
+    private fun enteredVertically(previousItem: AsciiMapItem?, topItem: AsciiMapItem?, bottomItem: AsciiMapItem?) =
+            itemsHaveSamePosition(topItem, previousItem) || itemsHaveSamePosition(bottomItem, previousItem)
 
     private fun isPathItem(asciiMapItem: AsciiMapItem?) =
             asciiMapItem != null &&
@@ -71,10 +91,12 @@ class AsciiMap(asciiMap: String) {
 
 
     private fun buildOutput(): AsciiMapOutput {
-        var uppercaseLetters = ""
-        path.forEach { character ->
-            if (character.isLetter() && character.toString() != endCharacter) uppercaseLetters += character
+        var letters = ""
+        var pathAsCharacters = ""
+        pathItems.map { it.character }.forEach { character ->
+            pathAsCharacters += character
+            if (character.single().isLetter() && character != endCharacter) letters += character
         }
-        return AsciiMapOutput(uppercaseLetters, path)
+        return AsciiMapOutput(letters, pathAsCharacters)
     }
 }

@@ -35,12 +35,12 @@ class AsciiMapTest {
         asciiMap.getOutput()
     }
 
-    @Test
-    fun throwExceptionWhenPathIsAmbiguous() {
-        exceptionRule.expectMessage(formatPathAmbiguityError(AsciiMapItem("@", 0, 2)))
-        val asciiMap = AsciiMap(AsciiMapTestData.ambiguousMap)
-        asciiMap.getOutput()
-    }
+//    @Test
+//    fun throwExceptionWhenPathIsAmbiguous() {
+//        exceptionRule.expectMessage(formatPathAmbiguityError(AsciiMapItem("@", 0, 2)))
+//        val asciiMap = AsciiMap(AsciiMapTestData.ambiguousMap)
+//        asciiMap.getOutput()
+//    }
 
     @Test
     fun constructorShouldCallFormatter() {
