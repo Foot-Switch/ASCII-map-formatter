@@ -12,10 +12,9 @@ class AsciiMap(asciiMap: String) {
     private val endCharacter = "x"
     private val pathCharacterHorizontal = "-"
     private val pathCharacterVertical = "|"
-    private val pathCharacterRedirect = "+"
+    private val pathCharacterCorner = "+"
 
     private val unambiguousNumberOfNextItemCandidates = 1
-    private val maximumNumberOfNextItemCandidates = 3
 
     val items: List<AsciiMapItem> = AsciiMapItemSerializer.serializeAsciiMapItems(asciiMap)
 
@@ -67,7 +66,7 @@ class AsciiMap(asciiMap: String) {
         nextItem = when {
             nextItemCandidates.isEmpty() -> throw Exception(formatPathBreakErrorMessage(currentItem))
             startIsAmbiguous(currentItem, nextItemCandidates)
-                    || redirectIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
+                    || cornerIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
             validJunction(currentItem, nextItemCandidates) -> findNextItemInJunction(previousItem!!, currentItem, nextItemCandidates)
             else -> getOnlyRemainingNextStepCandidate(nextItemCandidates)
         }
@@ -78,14 +77,14 @@ class AsciiMap(asciiMap: String) {
         return currentItem.character == startCharacter && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
     }
 
-    private fun redirectIsAmbiguous(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): Boolean {
-        return currentItem.character == pathCharacterRedirect && nextItemCandidates.size != unambiguousNumberOfNextItemCandidates
+    private fun cornerIsAmbiguous(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): Boolean {
+        return currentItem.character == pathCharacterCorner && nextItemCandidates.size != unambiguousNumberOfNextItemCandidates
     }
 
     private fun getOnlyRemainingNextStepCandidate(nextItemCandidates: List<AsciiMapItem>) = nextItemCandidates[0]
 
     private fun validJunction(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>) =
-            currentItem.character != pathCharacterRedirect && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
+            currentItem.character != pathCharacterCorner && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
 
     private fun removeInvalidItemsFromAdjacentItems(allAdjacentItems: List<AsciiMapItem?>, previousItem: AsciiMapItem?): List<AsciiMapItem> {
         val nextItemCandidates = mutableListOf<AsciiMapItem>()
@@ -120,7 +119,7 @@ class AsciiMap(asciiMap: String) {
                     (asciiMapItem.character == pathCharacterHorizontal
                             || asciiMapItem.character == pathCharacterVertical
                             || asciiMapItem.character.single().isLetter()
-                            || asciiMapItem.character == pathCharacterRedirect
+                            || asciiMapItem.character == pathCharacterCorner
                             || asciiMapItem.character == endCharacter)
 
 }
