@@ -91,12 +91,18 @@ class AsciiMap(asciiMap: String) {
 
 
     private fun buildOutput(): AsciiMapOutput {
-        var letters = ""
+        val letterItems = mutableListOf<AsciiMapItem>()
         var pathAsCharacters = ""
-        pathItems.map { it.character }.forEach { character ->
-            pathAsCharacters += character
-            if (character.single().isLetter() && character != endCharacter) letters += character
+        pathItems.forEach { asciiMapItem ->
+            pathAsCharacters += asciiMapItem.character
+            if (isPathLetterCharacter(asciiMapItem) && !letterItems.contains(asciiMapItem))
+                letterItems.add(asciiMapItem)
         }
+        var letters = ""
+        letterItems.forEach { asciiMapItem -> letters += asciiMapItem.character }
         return AsciiMapOutput(letters, pathAsCharacters)
     }
+
+    private fun isPathLetterCharacter(asciiMapItem: AsciiMapItem) =
+            asciiMapItem.character.single().isLetter() && asciiMapItem.character != endCharacter
 }
