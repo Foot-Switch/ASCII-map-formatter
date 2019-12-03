@@ -1,5 +1,8 @@
 import main.AsciiMap
-import main.AsciiMapFormatter
+import main.AsciiMapErrorFormatter.NO_END_CHARACTER_ERROR_MESSAGE
+import main.AsciiMapErrorFormatter.NO_START_CHARACTER_ERROR_MESSAGE
+import main.AsciiMapErrorFormatter.formatPathBreakError
+import main.AsciiMapItemFormatter
 import main.AsciiMapItem
 import main.AsciiMapTestData
 import org.junit.Rule
@@ -15,21 +18,21 @@ class AsciiMapTest {
 
     @Test
     fun throwExceptionWhenNoStartCharacterIsPresent() {
-        exceptionRule.expectMessage(AsciiMapTestData.NO_START_CHARACTER_ERROR_MESSAGE)
+        exceptionRule.expectMessage(NO_START_CHARACTER_ERROR_MESSAGE)
         val asciiMap = AsciiMap(AsciiMapTestData.mapWithoutStart)
         asciiMap.getOutput()
     }
 
     @Test
     fun throwExceptionWhenNoEndCharacterIsPresent() {
-        exceptionRule.expectMessage(AsciiMapTestData.NO_END_CHARACTER_ERROR_MESSAGE)
+        exceptionRule.expectMessage(NO_END_CHARACTER_ERROR_MESSAGE)
         val asciiMap = AsciiMap(AsciiMapTestData.mapWithoutEnd)
         asciiMap.getOutput()
     }
 
     @Test
-    fun throwExceptionWhenMapBreaks() {
-        exceptionRule.expectMessage(AsciiMapTestData.formatPositionError(AsciiMapItem(" ", 0, 1)))
+    fun throwExceptionWhenPathBreaks() {
+        exceptionRule.expectMessage(formatPathBreakError(AsciiMapItem("@", 0, 0)))
         val asciiMap = AsciiMap(AsciiMapTestData.brokenPathMap)
         asciiMap.getOutput()
     }
@@ -37,7 +40,7 @@ class AsciiMapTest {
     @Test
     fun constructorShouldCallFormatter() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapOne)
-        assertEquals(AsciiMapFormatter.formatAsciiMapItems(AsciiMapTestData.mapOne), asciiMap.items)
+        assertEquals(AsciiMapItemFormatter.formatAsciiMapItems(AsciiMapTestData.mapOne), asciiMap.items)
     }
 
     @Test

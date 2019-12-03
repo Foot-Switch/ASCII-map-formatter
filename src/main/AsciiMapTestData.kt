@@ -3,13 +3,6 @@ package main
 
 object AsciiMapTestData {
 
-    private const val positionPlaceholder = "{position}"
-    private const val PATH_BREAKS_ERROR_MESSAGE = "The path breaks at position $positionPlaceholder because no adjacent items are part of a valid path."
-
-    const val EMPTY_INPUT_ERROR_MESSAGE = "Input cannot be empty"
-    const val NO_START_CHARACTER_ERROR_MESSAGE = "Input must have exactly one start character marked with \"@\"."
-    const val NO_END_CHARACTER_ERROR_MESSAGE = "Input must have exactly one end character marked with \"x\"."
-
     const val emptyMap = ""
     const val mapWithoutStart = "--x"
     const val mapWithoutEnd = "@--"
@@ -21,9 +14,6 @@ object AsciiMapTestData {
                     "  x-B-+   C\n" +
                     "      |   |\n" +
                     "      +---+"
-
-    fun formatPositionError(asciiMapItem: AsciiMapItem) =
-            PATH_BREAKS_ERROR_MESSAGE.replace(positionPlaceholder, "[${asciiMapItem.rowIndex},${asciiMapItem.rowIndex}]")
 
     val expectedItemsOne = listOf(
             AsciiMapItem("@", 0, 0),

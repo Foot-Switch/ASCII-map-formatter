@@ -1,5 +1,9 @@
 package main
 
+import main.AsciiMapErrorFormatter.NO_END_CHARACTER_ERROR_MESSAGE
+import main.AsciiMapErrorFormatter.NO_START_CHARACTER_ERROR_MESSAGE
+import main.AsciiMapErrorFormatter.formatPathBreakError
+
 
 class AsciiMap(asciiMap: String) {
 
@@ -9,7 +13,7 @@ class AsciiMap(asciiMap: String) {
     private val pathCharacterVertical = "|"
     private val pathCharacterJunction = "+"
 
-    val items: List<AsciiMapItem> = AsciiMapFormatter.formatAsciiMapItems(asciiMap)
+    val items: List<AsciiMapItem> = AsciiMapItemFormatter.formatAsciiMapItems(asciiMap)
 
     private var path = ""
 
@@ -17,8 +21,8 @@ class AsciiMap(asciiMap: String) {
         val startItem = items.find { it.character == startCharacter }
         val endItem = items.find { it.character == endCharacter }
         when {
-            startItem == null -> throw Exception(AsciiMapTestData.NO_START_CHARACTER_ERROR_MESSAGE)
-            endItem == null -> throw Exception(AsciiMapTestData.NO_END_CHARACTER_ERROR_MESSAGE)
+            startItem == null -> throw Exception(NO_START_CHARACTER_ERROR_MESSAGE)
+            endItem == null -> throw Exception(NO_END_CHARACTER_ERROR_MESSAGE)
             else -> appendNextCharacter(startItem)
         }
         return buildOutput()
@@ -39,7 +43,7 @@ class AsciiMap(asciiMap: String) {
         val bottomItem = items.find { it.rowIndex == currentItem.rowIndex + 1 && it.columnIndex == currentItem.columnIndex }
         val adjacentItems = listOf(leftItem, topItem, rightItem, bottomItem)
         when {
-            pathBreaks(adjacentItems) -> throw Exception(AsciiMapTestData.formatPositionError(currentItem))
+            pathBreaks(adjacentItems) -> throw Exception(formatPathBreakError(currentItem))
         }
         return nextItem
     }
