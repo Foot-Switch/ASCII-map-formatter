@@ -62,11 +62,10 @@ class AsciiMap(asciiMap: String) {
         val rightItem = items.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex + 1 }
         val bottomItem = items.find { it.rowIndex == currentItem.rowIndex + 1 && it.columnIndex == currentItem.columnIndex }
         val allAdjacentItems = mutableListOf(leftItem, topItem, rightItem, bottomItem)
-        val nextItemCandidates = removeInvalidItemsFromAdjacentItems(allAdjacentItems, previousItem)
+        val nextItemCandidates = findNextCandidatesAmongAllAdjacentItems(allAdjacentItems, previousItem)
         nextItem = when {
             nextItemCandidates.isEmpty() -> throw Exception(formatPathBreakErrorMessage(currentItem))
-            startIsAmbiguous(currentItem, nextItemCandidates)
-                    || cornerIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
+            startIsAmbiguous(currentItem, nextItemCandidates) || cornerIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
             validJunction(currentItem, nextItemCandidates) -> findNextItemInJunction(previousItem!!, currentItem, nextItemCandidates)
             else -> getOnlyRemainingNextStepCandidate(nextItemCandidates)
         }
@@ -86,7 +85,7 @@ class AsciiMap(asciiMap: String) {
     private fun validJunction(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>) =
             currentItem.character != pathCharacterCorner && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
 
-    private fun removeInvalidItemsFromAdjacentItems(allAdjacentItems: List<AsciiMapItem?>, previousItem: AsciiMapItem?): List<AsciiMapItem> {
+    private fun findNextCandidatesAmongAllAdjacentItems(allAdjacentItems: List<AsciiMapItem?>, previousItem: AsciiMapItem?): List<AsciiMapItem> {
         val nextItemCandidates = mutableListOf<AsciiMapItem>()
         allAdjacentItems.forEach { adjacentItem -> if (isPathItem(adjacentItem)) nextItemCandidates.add(adjacentItem!!) }
         nextItemCandidates.removeIf { itemsHaveSamePosition(it, previousItem) }
