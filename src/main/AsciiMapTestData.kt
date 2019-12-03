@@ -3,6 +3,8 @@ package main
 
 object AsciiMapTestData {
 
+    const val testFileName = "src/test/test.txt"
+
     const val emptyMap = ""
     const val mapWithoutStart = "--x"
     const val mapWithoutEnd = "@--"
@@ -69,13 +71,13 @@ object AsciiMapTestData {
 
     const val mapTwo =
             "\n" +
-                    "  @\n" +
-                    "  | C----+\n" +
-                    "  A |    |\n" +
-                    "  +---B--+\n" +
-                    "    |      x\n" +
-                    "    |      |\n" +
-                    "    +---D--+"
+                    "@\n" +
+                    "| C----+\n" +
+                    "A |    |\n" +
+                    "+---B--+\n" +
+                    "  |      x\n" +
+                    "  |      |\n" +
+                    "  +---D--+"
 
     val expectedItemsTwo = listOf(
             AsciiMapItem("@", 0, 0),
