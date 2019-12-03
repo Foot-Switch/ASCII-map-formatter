@@ -1,6 +1,6 @@
-import main.AsciiMapReader
-import main.AsciiMapReader.LETTERS_PLACEHOLDER
-import main.AsciiMapReader.PATH_AS_CHARACTERS_PLACEHOLDER
+import main.AsciiMapFileReader
+import main.AsciiMapFileReader.LETTERS_PLACEHOLDER
+import main.AsciiMapFileReader.PATH_AS_CHARACTERS_PLACEHOLDER
 import main.AsciiMapTestData.expectedOutputTwo
 import main.AsciiMapTestData.testFilePath
 import org.junit.Test
@@ -11,7 +11,7 @@ import java.io.ByteArrayOutputStream
 import org.junit.After
 
 
-class AsciiMapReaderTest {
+class AsciiMapFileReaderTest {
 
     private val outContent = ByteArrayOutputStream()
     private val originalOut = System.out
@@ -22,8 +22,8 @@ class AsciiMapReaderTest {
     }
 
     @Test
-    fun runMainMethod() {
-        AsciiMapReader.main(arrayOf(testFilePath))
+    fun processAsciiMapFromFile() {
+        AsciiMapFileReader.readAsciiMapFromFile(testFilePath)
         assertEquals("$LETTERS_PLACEHOLDER${expectedOutputTwo.letters}\n$PATH_AS_CHARACTERS_PLACEHOLDER${expectedOutputTwo.pathAsCharacters}", outContent.toString())
     }
 
