@@ -51,7 +51,7 @@ class AsciiMap(asciiMap: String) {
         nextItem = when {
             nextItemCandidates.isEmpty() -> throw Exception(formatPathBreakErrorMessage(currentItem))
             junctionIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
-            isFullJunction(nextItemCandidates) -> findNextItemInFullJunction(previousItem, currentItem, nextItemCandidates)
+            isFullJunction(nextItemCandidates) -> findNextItemInFullJunction(previousItem!!, currentItem, nextItemCandidates)
             else -> nextItemCandidates[0]
         }
         return nextItem
@@ -75,19 +75,23 @@ class AsciiMap(asciiMap: String) {
                 || (currentItem.character != pathCharacterJunction && nextItemCandidates.size == ambiguousNumberOfNextItemCandidates)
     }
 
-    private fun findNextItemInFullJunction(previousItem: AsciiMapItem?, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem {
-        return if (enteredHorizontally(currentItem, previousItem)) findNextHorizontalItem(nextItemCandidates, currentItem)
-        else findNextVerticalItem(nextItemCandidates, currentItem)
+    private fun findNextItemInFullJunction(previousItem: AsciiMapItem, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem {
+        return if (enteredHorizontally(currentItem, previousItem)) findNextHorizontalItem(previousItem, currentItem, nextItemCandidates)
+        else findNextVerticalItem(previousItem, currentItem, nextItemCandidates)
     }
 
     private fun enteredHorizontally(currentItem: AsciiMapItem, previousItem: AsciiMapItem?) =
             currentItem.rowIndex == previousItem?.rowIndex
 
-    private fun findNextHorizontalItem(nextItemCandidates: List<AsciiMapItem>, currentItem: AsciiMapItem) =
-            nextItemCandidates.find { it.columnIndex == currentItem.columnIndex + 1 }!!
+    private fun findNextHorizontalItem(previousItem: AsciiMapItem, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem {
+        val nextHorizontalPosition = if (previousItem.columnIndex < currentItem.columnIndex) currentItem.columnIndex + 1 else currentItem.columnIndex - 1
+        return nextItemCandidates.find { it.columnIndex == nextHorizontalPosition }!!
+    }
 
-    private fun findNextVerticalItem(nextItemCandidates: List<AsciiMapItem>, currentItem: AsciiMapItem) =
-            nextItemCandidates.find { it.rowIndex == currentItem.rowIndex + 1 }!!
+    private fun findNextVerticalItem(previousItem: AsciiMapItem, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem {
+        val nextVerticalPosition = if (previousItem.rowIndex < currentItem.rowIndex) currentItem.rowIndex + 1 else currentItem.rowIndex - 1
+        return nextItemCandidates.find { it.rowIndex == nextVerticalPosition }!!
+    }
 
     private fun isPathItem(asciiMapItem: AsciiMapItem?) =
             asciiMapItem != null &&
