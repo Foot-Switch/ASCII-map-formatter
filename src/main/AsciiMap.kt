@@ -23,30 +23,34 @@ class AsciiMap(asciiMap: String) {
         when {
             startItem == null -> throw Exception(NO_START_CHARACTER_ERROR_MESSAGE)
             endItem == null -> throw Exception(NO_END_CHARACTER_ERROR_MESSAGE)
-            else -> appendNextCharacter(startItem)
+            else -> appendNextCharacter(null, startItem)
         }
         return buildOutput()
     }
 
-    private fun appendNextCharacter(currentItem: AsciiMapItem) {
+    private fun appendNextCharacter(previousItem: AsciiMapItem?, currentItem: AsciiMapItem) {
         path += currentItem.character
         if (currentItem.character == endCharacter) return
-        val nextItem = findNextItem(currentItem) ?: return
-        appendNextCharacter(nextItem)
+        val nextItem = findNextItem(previousItem, currentItem) ?: return
+        appendNextCharacter(previousItem, nextItem)
     }
 
-    private fun findNextItem(currentItem: AsciiMapItem): AsciiMapItem? {
+    private fun findNextItem(previousItem: AsciiMapItem?, currentItem: AsciiMapItem): AsciiMapItem? {
         val nextItem: AsciiMapItem? = null
         val leftItem = items.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex - 1 }
         val topItem = items.find { it.rowIndex == currentItem.rowIndex - 1 && it.columnIndex == currentItem.columnIndex }
         val rightItem = items.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex + 1 }
         val bottomItem = items.find { it.rowIndex == currentItem.rowIndex + 1 && it.columnIndex == currentItem.columnIndex }
-        val adjacentItems = listOf(leftItem, topItem, rightItem, bottomItem)
+        val adjacentItems = mutableListOf(leftItem, topItem, rightItem, bottomItem)
+        adjacentItems.removeIf { itemsAreAtTheSamePosition(it, previousItem) }
         when {
             pathBreaks(adjacentItems) -> throw Exception(formatPathBreakError(currentItem))
         }
         return nextItem
     }
+
+    private fun itemsAreAtTheSamePosition(itemOne: AsciiMapItem?, itemTwo: AsciiMapItem?) =
+            itemOne?.rowIndex == itemTwo?.rowIndex && itemOne?.columnIndex == itemTwo?.columnIndex
 
     private fun pathBreaks(adjacentItems: List<AsciiMapItem?>) = adjacentItems.find { isPathItem(it) } == null
 
