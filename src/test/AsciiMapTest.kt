@@ -33,9 +33,15 @@ class AsciiMapTest {
     }
 
     @Test
-    fun throwExceptionWhenPathIsAmbiguous() {
+    fun throwExceptionWhenStartIsAmbiguous() {
         exceptionRule.expectMessage(formatPathAmbiguityErrorMessage(AsciiMapItem("@", 0, 2)))
-        AsciiMap(AsciiMapTestData.ambiguousMap)
+        AsciiMap(AsciiMapTestData.ambiguousStartMap)
+    }
+
+    @Test
+    fun throwExceptionWhenRedirectIsAmbiguous() {
+        exceptionRule.expectMessage(formatPathAmbiguityErrorMessage(AsciiMapItem("+", 0, 7)))
+        AsciiMap(AsciiMapTestData.ambiguousRedirectMap)
     }
 
     @Test

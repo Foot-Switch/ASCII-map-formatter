@@ -9,7 +9,14 @@ object AsciiMapTestData {
     const val mapWithoutStart = "--x"
     const val mapWithoutEnd = "@--"
     const val brokenPathMap = "@  --x"
-    const val ambiguousMap = "--@--x"
+    const val ambiguousStartMap = "--@--x"
+    const val ambiguousRedirectMap =
+            "\n" +
+                    "  @---A--+-\n" +
+                    "         | \n" +
+                    "      +--x \n" +
+                    "      |  | \n" +
+                    "      +--+"
 
     const val mapOne =
             "\n" +

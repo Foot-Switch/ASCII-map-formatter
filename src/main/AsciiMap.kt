@@ -12,10 +12,9 @@ class AsciiMap(asciiMap: String) {
     private val endCharacter = "x"
     private val pathCharacterHorizontal = "-"
     private val pathCharacterVertical = "|"
-    private val pathCharacterJunction = "+"
+    private val pathCharacterRedirect = "+"
 
     private val unambiguousNumberOfNextItemCandidates = 1
-    private val ambiguousNumberOfNextItemCandidates = 2
     private val maximumNumberOfNextItemCandidates = 3
 
     val items: List<AsciiMapItem> = AsciiMapItemSerializer.serializeAsciiMapItems(asciiMap)
@@ -67,17 +66,26 @@ class AsciiMap(asciiMap: String) {
         val nextItemCandidates = removeInvalidItemsFromAdjacentItems(allAdjacentItems, previousItem)
         nextItem = when {
             nextItemCandidates.isEmpty() -> throw Exception(formatPathBreakErrorMessage(currentItem))
-            junctionIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
-            isFullJunction(nextItemCandidates) -> findNextItemInFullJunction(previousItem!!, currentItem, nextItemCandidates)
+            startIsAmbiguous(currentItem, nextItemCandidates)
+                    || redirectIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
+            validJunction(currentItem, nextItemCandidates) -> findNextItemInJunction(previousItem!!, currentItem, nextItemCandidates)
             else -> getOnlyRemainingNextStepCandidate(nextItemCandidates)
         }
         return nextItem
     }
 
+    private fun startIsAmbiguous(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): Boolean {
+        return currentItem.character == startCharacter && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
+    }
+
+    private fun redirectIsAmbiguous(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): Boolean {
+        return currentItem.character == pathCharacterRedirect && nextItemCandidates.size != unambiguousNumberOfNextItemCandidates
+    }
+
     private fun getOnlyRemainingNextStepCandidate(nextItemCandidates: List<AsciiMapItem>) = nextItemCandidates[0]
 
-    private fun isFullJunction(nextItemCandidates: List<AsciiMapItem>) =
-            nextItemCandidates.size == maximumNumberOfNextItemCandidates
+    private fun validJunction(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>) =
+            currentItem.character != pathCharacterRedirect && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
 
     private fun removeInvalidItemsFromAdjacentItems(allAdjacentItems: List<AsciiMapItem?>, previousItem: AsciiMapItem?): List<AsciiMapItem> {
         val nextItemCandidates = mutableListOf<AsciiMapItem>()
@@ -89,12 +97,7 @@ class AsciiMap(asciiMap: String) {
     private fun itemsHaveSamePosition(itemOne: AsciiMapItem?, itemTwo: AsciiMapItem?) =
             itemOne?.rowIndex == itemTwo?.rowIndex && itemOne?.columnIndex == itemTwo?.columnIndex
 
-    private fun junctionIsAmbiguous(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): Boolean {
-        return (currentItem.character == pathCharacterJunction && nextItemCandidates.size != unambiguousNumberOfNextItemCandidates)
-                || (currentItem.character != pathCharacterJunction && nextItemCandidates.size == ambiguousNumberOfNextItemCandidates)
-    }
-
-    private fun findNextItemInFullJunction(previousItem: AsciiMapItem, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem {
+    private fun findNextItemInJunction(previousItem: AsciiMapItem, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem {
         return if (enteredHorizontally(currentItem, previousItem)) findNextHorizontalItem(previousItem, currentItem, nextItemCandidates)
         else findNextVerticalItem(previousItem, currentItem, nextItemCandidates)
     }
@@ -117,7 +120,7 @@ class AsciiMap(asciiMap: String) {
                     (asciiMapItem.character == pathCharacterHorizontal
                             || asciiMapItem.character == pathCharacterVertical
                             || asciiMapItem.character.single().isLetter()
-                            || asciiMapItem.character == pathCharacterJunction
+                            || asciiMapItem.character == pathCharacterRedirect
                             || asciiMapItem.character == endCharacter)
 
 }
