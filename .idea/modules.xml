@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ascii-map-formatter.iml" filepath="$PROJECT_DIR$/ascii-map-formatter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ascii-map-formatter.iml" filepath="$PROJECT_DIR$/.idea/ascii-map-formatter.iml" />
     </modules>
   </component>
 </project>
