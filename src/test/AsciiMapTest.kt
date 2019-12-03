@@ -1,10 +1,8 @@
-import main.AsciiMap
+import main.*
 import main.AsciiMapErrorFormatter.NO_END_CHARACTER_ERROR_MESSAGE
 import main.AsciiMapErrorFormatter.NO_START_CHARACTER_ERROR_MESSAGE
+import main.AsciiMapErrorFormatter.formatPathAmbiguityError
 import main.AsciiMapErrorFormatter.formatPathBreakError
-import main.AsciiMapItemFormatter
-import main.AsciiMapItem
-import main.AsciiMapTestData
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
@@ -38,6 +36,13 @@ class AsciiMapTest {
     }
 
     @Test
+    fun throwExceptionWhenPathIsAmbiguous() {
+        exceptionRule.expectMessage(formatPathAmbiguityError(AsciiMapItem("@", 0, 2)))
+        val asciiMap = AsciiMap(AsciiMapTestData.ambiguousMap)
+        asciiMap.getOutput()
+    }
+
+    @Test
     fun constructorShouldCallFormatter() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapOne)
         assertEquals(AsciiMapItemFormatter.formatAsciiMapItems(AsciiMapTestData.mapOne), asciiMap.items)
@@ -46,18 +51,21 @@ class AsciiMapTest {
     @Test
     fun getOutputOne() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapOne)
-        assertEquals(AsciiMapTestData.expectedOutputOne, asciiMap.getOutput())
+        val output = asciiMap.getOutput()
+        assertEquals(AsciiMapTestData.expectedOutputOne, output)
     }
 
     @Test
     fun getOutputTwo() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapTwo)
-        assertEquals(AsciiMapTestData.expectedOutputTwo, asciiMap.getOutput())
+        val output = asciiMap.getOutput()
+        assertEquals(AsciiMapTestData.expectedOutputTwo, output)
     }
 
     @Test
     fun getOutputThree() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapThree)
-        assertEquals(AsciiMapTestData.expectedOutputThree, asciiMap.getOutput())
+        val output = asciiMap.getOutput()
+        assertEquals(AsciiMapTestData.expectedOutputThree, output)
     }
 }
