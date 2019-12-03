@@ -21,9 +21,13 @@ class AsciiMap(asciiMap: String) {
     val items: List<AsciiMapItem> = AsciiMapItemFormatter.formatAsciiMapItems(asciiMap)
 
     private val pathItems = mutableListOf<AsciiMapItem>()
+    var output: AsciiMapOutput? = null
 
-    fun getOutput(): AsciiMapOutput {
-        pathItems.clear()
+    init {
+        output = buildOutput()
+    }
+
+    private fun buildOutput(): AsciiMapOutput {
         val startItem = items.find { it.character == startCharacter }
         val endItem = items.find { it.character == endCharacter }
         when {
@@ -31,8 +35,20 @@ class AsciiMap(asciiMap: String) {
             endItem == null -> throw Exception(NO_END_CHARACTER_ERROR_MESSAGE)
             else -> appendNextCharacter(null, startItem)
         }
-        return buildOutput()
+        val letterItems = mutableListOf<AsciiMapItem>()
+        var pathAsCharacters = ""
+        pathItems.forEach { asciiMapItem ->
+            pathAsCharacters += asciiMapItem.character
+            if (isPathLetterCharacter(asciiMapItem) && !letterItems.contains(asciiMapItem))
+                letterItems.add(asciiMapItem)
+        }
+        var letters = ""
+        letterItems.forEach { asciiMapItem -> letters += asciiMapItem.character }
+        return AsciiMapOutput(letters, pathAsCharacters)
     }
+
+    private fun isPathLetterCharacter(asciiMapItem: AsciiMapItem) =
+            asciiMapItem.character.single().isLetter() && asciiMapItem.character != endCharacter
 
     private fun appendNextCharacter(previousItem: AsciiMapItem?, currentItem: AsciiMapItem) {
         pathItems.add(currentItem)
@@ -104,20 +120,4 @@ class AsciiMap(asciiMap: String) {
                             || asciiMapItem.character == pathCharacterJunction
                             || asciiMapItem.character == endCharacter)
 
-
-    private fun buildOutput(): AsciiMapOutput {
-        val letterItems = mutableListOf<AsciiMapItem>()
-        var pathAsCharacters = ""
-        pathItems.forEach { asciiMapItem ->
-            pathAsCharacters += asciiMapItem.character
-            if (isPathLetterCharacter(asciiMapItem) && !letterItems.contains(asciiMapItem))
-                letterItems.add(asciiMapItem)
-        }
-        var letters = ""
-        letterItems.forEach { asciiMapItem -> letters += asciiMapItem.character }
-        return AsciiMapOutput(letters, pathAsCharacters)
-    }
-
-    private fun isPathLetterCharacter(asciiMapItem: AsciiMapItem) =
-            asciiMapItem.character.single().isLetter() && asciiMapItem.character != endCharacter
 }

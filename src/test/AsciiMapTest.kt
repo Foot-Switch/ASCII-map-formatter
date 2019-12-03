@@ -17,29 +17,25 @@ class AsciiMapTest {
     @Test
     fun throwExceptionWhenNoStartCharacterIsPresent() {
         exceptionRule.expectMessage(NO_START_CHARACTER_ERROR_MESSAGE)
-        val asciiMap = AsciiMap(AsciiMapTestData.mapWithoutStart)
-        asciiMap.getOutput()
+        AsciiMap(AsciiMapTestData.mapWithoutStart)
     }
 
     @Test
     fun throwExceptionWhenNoEndCharacterIsPresent() {
         exceptionRule.expectMessage(NO_END_CHARACTER_ERROR_MESSAGE)
-        val asciiMap = AsciiMap(AsciiMapTestData.mapWithoutEnd)
-        asciiMap.getOutput()
+        AsciiMap(AsciiMapTestData.mapWithoutEnd)
     }
 
     @Test
     fun throwExceptionWhenPathBreaks() {
         exceptionRule.expectMessage(formatPathBreakErrorMessage(AsciiMapItem("@", 0, 0)))
-        val asciiMap = AsciiMap(AsciiMapTestData.brokenPathMap)
-        asciiMap.getOutput()
+        AsciiMap(AsciiMapTestData.brokenPathMap)
     }
 
     @Test
     fun throwExceptionWhenPathIsAmbiguous() {
         exceptionRule.expectMessage(formatPathAmbiguityErrorMessage(AsciiMapItem("@", 0, 2)))
-        val asciiMap = AsciiMap(AsciiMapTestData.ambiguousMap)
-        asciiMap.getOutput()
+        AsciiMap(AsciiMapTestData.ambiguousMap)
     }
 
     @Test
@@ -51,21 +47,18 @@ class AsciiMapTest {
     @Test
     fun formatOutputOne() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapOne)
-        val output = asciiMap.getOutput()
-        assertEquals(AsciiMapTestData.expectedOutputOne, output)
+        assertEquals(AsciiMapTestData.expectedOutputOne, asciiMap.output)
     }
 
     @Test
     fun formatOutputTwo() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapTwo)
-        val output = asciiMap.getOutput()
-        assertEquals(AsciiMapTestData.expectedOutputTwo, output)
+        assertEquals(AsciiMapTestData.expectedOutputTwo, asciiMap.output)
     }
 
     @Test
     fun formatOutputThree() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapThree)
-        val output = asciiMap.getOutput()
-        assertEquals(AsciiMapTestData.expectedOutputThree, output)
+        assertEquals(AsciiMapTestData.expectedOutputThree, asciiMap.output)
     }
 }
