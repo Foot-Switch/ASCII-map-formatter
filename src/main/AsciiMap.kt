@@ -67,7 +67,7 @@ class AsciiMap(asciiMap: String) {
             nextItemCandidates.isEmpty() -> throw Exception(formatPathBreakErrorMessage(currentItem))
             startIsAmbiguous(currentItem, nextItemCandidates) || cornerIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
             validJunction(currentItem, nextItemCandidates) -> findNextItemInJunction(previousItem!!, currentItem, nextItemCandidates)
-            else -> getOnlyRemainingNextStepCandidate(nextItemCandidates)
+            else -> getTheOnlyRemainingNextStepCandidate(nextItemCandidates)
         }
         return nextItem
     }
@@ -80,7 +80,7 @@ class AsciiMap(asciiMap: String) {
         return currentItem.character == pathCharacterCorner && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
     }
 
-    private fun getOnlyRemainingNextStepCandidate(nextItemCandidates: List<AsciiMapItem>) = nextItemCandidates[0]
+    private fun getTheOnlyRemainingNextStepCandidate(nextItemCandidates: List<AsciiMapItem>) = nextItemCandidates[0]
 
     private fun validJunction(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>) =
             currentItem.character != pathCharacterCorner && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
