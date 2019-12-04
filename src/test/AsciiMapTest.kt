@@ -1,6 +1,6 @@
 import main.*
-import main.AsciiMapErrorFormatter.NO_END_CHARACTER_ERROR_MESSAGE
-import main.AsciiMapErrorFormatter.NO_START_CHARACTER_ERROR_MESSAGE
+import main.AsciiMapErrorFormatter.END_CHARACTER_ERROR_MESSAGE
+import main.AsciiMapErrorFormatter.START_CHARACTER_ERROR_MESSAGE
 import main.AsciiMapErrorFormatter.formatPathAmbiguityErrorMessage
 import main.AsciiMapErrorFormatter.formatPathBreakErrorMessage
 import org.junit.Rule
@@ -16,14 +16,26 @@ class AsciiMapTest {
 
     @Test
     fun throwExceptionWhenNoStartCharacterIsPresent() {
-        exceptionRule.expectMessage(NO_START_CHARACTER_ERROR_MESSAGE)
+        exceptionRule.expectMessage(START_CHARACTER_ERROR_MESSAGE)
         AsciiMap(AsciiMapTestData.mapWithoutStart)
     }
 
     @Test
     fun throwExceptionWhenNoEndCharacterIsPresent() {
-        exceptionRule.expectMessage(NO_END_CHARACTER_ERROR_MESSAGE)
+        exceptionRule.expectMessage(END_CHARACTER_ERROR_MESSAGE)
         AsciiMap(AsciiMapTestData.mapWithoutEnd)
+    }
+
+    @Test
+    fun throwExceptionWhenMultipleStartCharactersArePresent() {
+        exceptionRule.expectMessage(START_CHARACTER_ERROR_MESSAGE)
+        AsciiMap(AsciiMapTestData.mapWithMultipleStart)
+    }
+
+    @Test
+    fun throwExceptionWhenMultipleEndCharactersArePresent() {
+        exceptionRule.expectMessage(END_CHARACTER_ERROR_MESSAGE)
+        AsciiMap(AsciiMapTestData.mapWithMultipleEnd)
     }
 
     @Test

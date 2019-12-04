@@ -1,7 +1,7 @@
 package main
 
-import main.AsciiMapErrorFormatter.NO_END_CHARACTER_ERROR_MESSAGE
-import main.AsciiMapErrorFormatter.NO_START_CHARACTER_ERROR_MESSAGE
+import main.AsciiMapErrorFormatter.END_CHARACTER_ERROR_MESSAGE
+import main.AsciiMapErrorFormatter.START_CHARACTER_ERROR_MESSAGE
 import main.AsciiMapErrorFormatter.formatPathAmbiguityErrorMessage
 import main.AsciiMapErrorFormatter.formatPathBreakErrorMessage
 
@@ -27,12 +27,12 @@ class AsciiMap(asciiMap: String) {
     }
 
     private fun buildItemPath() {
-        val startItem = allItems.find { it.character == startCharacter }
-        val endItem = allItems.find { it.character == endCharacter }
+        val startItems = allItems.filter { it.character == startCharacter }
+        val endItems = allItems.filter { it.character == endCharacter }
         when {
-            startItem == null -> throw Exception(NO_START_CHARACTER_ERROR_MESSAGE)
-            endItem == null -> throw Exception(NO_END_CHARACTER_ERROR_MESSAGE)
-            else -> addNextItemToPath(null, startItem)
+            startItems.size != 1 -> throw Exception(START_CHARACTER_ERROR_MESSAGE)
+            endItems.size != 1 -> throw Exception(END_CHARACTER_ERROR_MESSAGE)
+            else -> addNextItemToPath(null, startItems[0])
         }
     }
 
@@ -85,6 +85,7 @@ class AsciiMap(asciiMap: String) {
             itemOne?.rowIndex == itemTwo?.rowIndex && itemOne?.columnIndex == itemTwo?.columnIndex
 
     private fun findNextItemInJunction(previousItem: AsciiMapItem, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem {
+        nextItemCandidates.find { it.character == endCharacter }?.let { return it }
         return if (enteredHorizontally(previousItem, currentItem))
             findNextHorizontalItem(previousItem, currentItem, nextItemCandidates)?.let { it }
                     ?: throw Exception(formatPathAmbiguityErrorMessage(currentItem))
