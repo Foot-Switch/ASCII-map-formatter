@@ -45,29 +45,35 @@ class AsciiMap(asciiMap: String) {
 
     private fun findNextItem(previousItem: AsciiMapItem?, currentItem: AsciiMapItem): AsciiMapItem? {
         val nextItem: AsciiMapItem?
-        val leftItem = allItems.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex - 1 }
-        val topItem = allItems.find { it.rowIndex == currentItem.rowIndex - 1 && it.columnIndex == currentItem.columnIndex }
-        val rightItem = allItems.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex + 1 }
-        val bottomItem = allItems.find { it.rowIndex == currentItem.rowIndex + 1 && it.columnIndex == currentItem.columnIndex }
-        val allAdjacentItems = mutableListOf(leftItem, topItem, rightItem, bottomItem)
-        val nextItemCandidates = findNextCandidatesAmongAllAdjacentItems(allAdjacentItems, previousItem)
+        val allAdjacentItems = findAdjacentItems(currentItem)
+        val validAdjacentItems = findValidAdjacentItems(allAdjacentItems)
+        removePreviousItemFromValidAdjacentItems(previousItem, validAdjacentItems)
         nextItem = when {
-            noValidNextItemCandidates(nextItemCandidates) -> throw Exception(formatPathBreakErrorMessage(currentItem))
-            startIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
-            isJunction(currentItem, nextItemCandidates) -> findNextItemInJunction(previousItem!!, currentItem, nextItemCandidates)
-            onlyOneNextItemCandidate(nextItemCandidates) -> getTheOnlyRemainingNextItemCandidate(nextItemCandidates)
+            validAdjacentItems.isEmpty() -> throw Exception(formatPathBreakErrorMessage(currentItem))
+            startIsAmbiguous(currentItem, validAdjacentItems) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
+            isJunction(currentItem, validAdjacentItems) -> findNextItemInJunction(previousItem!!, currentItem, validAdjacentItems)
+            onlyOneNextItemCandidate(validAdjacentItems) -> getTheOnlyRemainingNextItemCandidate(validAdjacentItems)
             else -> null
         }
         return nextItem
     }
 
-    private fun noValidNextItemCandidates(nextItemCandidates: List<AsciiMapItem>) = nextItemCandidates.isEmpty()
+    private fun findAdjacentItems(currentItem: AsciiMapItem): MutableList<AsciiMapItem?> {
+        val leftItem = allItems.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex - 1 }
+        val topItem = allItems.find { it.rowIndex == currentItem.rowIndex - 1 && it.columnIndex == currentItem.columnIndex }
+        val rightItem = allItems.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex + 1 }
+        val bottomItem = allItems.find { it.rowIndex == currentItem.rowIndex + 1 && it.columnIndex == currentItem.columnIndex }
+        return mutableListOf(leftItem, topItem, rightItem, bottomItem)
+    }
 
-    private fun findNextCandidatesAmongAllAdjacentItems(allAdjacentItems: List<AsciiMapItem?>, previousItem: AsciiMapItem?): List<AsciiMapItem> {
+    private fun findValidAdjacentItems(allAdjacentItems: List<AsciiMapItem?>): MutableList<AsciiMapItem> {
         val nextItemCandidates = mutableListOf<AsciiMapItem>()
         allAdjacentItems.forEach { adjacentItem -> if (isPathItem(adjacentItem)) nextItemCandidates.add(adjacentItem!!) }
-        nextItemCandidates.removeIf { itemsHaveSamePosition(it, previousItem) }
         return nextItemCandidates
+    }
+
+    private fun removePreviousItemFromValidAdjacentItems(previousItem: AsciiMapItem?, validAdjacentItems: MutableList<AsciiMapItem>) {
+        validAdjacentItems.removeIf { itemsHaveSamePosition(it, previousItem) }
     }
 
     private fun startIsAmbiguous(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): Boolean {
