@@ -39,12 +39,6 @@ class AsciiMapTest {
     }
 
     @Test
-    fun throwExceptionWhenRedirectIsAmbiguous() {
-        exceptionRule.expectMessage(formatPathAmbiguityErrorMessage(AsciiMapItem("+", 0, 7)))
-        AsciiMap(AsciiMapTestData.ambiguousRedirectMap)
-    }
-
-    @Test
     fun formatOutputOne() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapOne)
         assertEquals(AsciiMapTestData.expectedOutputOne, asciiMap.output)
