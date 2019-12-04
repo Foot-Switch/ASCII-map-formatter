@@ -13,6 +13,13 @@ object AsciiMapTestData {
     const val brokenPathMap = "@  --x"
     const val ambiguousStartMap = "--@--x"
 
+    const val ambiguousJunctionMap =
+            "\n" +
+                    "          |  \n" +
+                    "  @---A---+  \n" +
+                    "          |  \n" +
+                    "  x-------+   "
+
     const val mapOne =
             "\n" +
                     "  @---A---+\n" +

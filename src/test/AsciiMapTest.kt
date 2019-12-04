@@ -39,6 +39,12 @@ class AsciiMapTest {
     }
 
     @Test
+    fun throwExceptionWhenJunctionIsAmbiguous() {
+        exceptionRule.expectMessage(formatPathAmbiguityErrorMessage(AsciiMapItem("+", 1, 8)))
+        AsciiMap(AsciiMapTestData.ambiguousJunctionMap)
+    }
+
+    @Test
     fun formatOutputOne() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapOne)
         assertEquals(AsciiMapTestData.expectedOutputOne, asciiMap.output)

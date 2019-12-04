@@ -86,22 +86,24 @@ class AsciiMap(asciiMap: String) {
 
     private fun findNextItemInJunction(previousItem: AsciiMapItem, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem {
         return if (enteredHorizontally(previousItem, currentItem))
-            findNextHorizontalItem(previousItem, currentItem, nextItemCandidates)
+            findNextHorizontalItem(previousItem, currentItem, nextItemCandidates)?.let { it }
+                    ?: throw Exception(formatPathAmbiguityErrorMessage(currentItem))
         else
-            findNextVerticalItem(previousItem, currentItem, nextItemCandidates)
+            findNextVerticalItem(previousItem, currentItem, nextItemCandidates)?.let { it }
+                    ?: throw Exception(formatPathAmbiguityErrorMessage(currentItem))
     }
 
     private fun enteredHorizontally(previousItem: AsciiMapItem, currentItem: AsciiMapItem) =
             currentItem.rowIndex == previousItem.rowIndex
 
-    private fun findNextHorizontalItem(previousItem: AsciiMapItem, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem {
+    private fun findNextHorizontalItem(previousItem: AsciiMapItem, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem? {
         val nextHorizontalPosition = if (previousItem.columnIndex < currentItem.columnIndex) currentItem.columnIndex + 1 else currentItem.columnIndex - 1
-        return nextItemCandidates.find { it.columnIndex == nextHorizontalPosition }!!
+        return nextItemCandidates.find { it.columnIndex == nextHorizontalPosition }
     }
 
-    private fun findNextVerticalItem(previousItem: AsciiMapItem, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem {
+    private fun findNextVerticalItem(previousItem: AsciiMapItem, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem? {
         val nextVerticalPosition = if (previousItem.rowIndex < currentItem.rowIndex) currentItem.rowIndex + 1 else currentItem.rowIndex - 1
-        return nextItemCandidates.find { it.rowIndex == nextVerticalPosition }!!
+        return nextItemCandidates.find { it.rowIndex == nextVerticalPosition }
     }
 
     private fun getTheOnlyRemainingNextItemCandidate(nextItemCandidates: List<AsciiMapItem>) = nextItemCandidates[0]
