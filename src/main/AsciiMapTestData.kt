@@ -10,13 +10,6 @@ object AsciiMapTestData {
     const val mapWithoutEnd = "@--"
     const val brokenPathMap = "@  --x"
     const val ambiguousStartMap = "--@--x"
-    const val ambiguousRedirectMap =
-            "\n" +
-                    "  @---A--+-\n" +
-                    "         | \n" +
-                    "      +--x \n" +
-                    "      |  | \n" +
-                    "      +--+"
 
     const val mapOne =
             "\n" +

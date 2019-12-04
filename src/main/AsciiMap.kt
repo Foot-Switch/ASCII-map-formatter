@@ -51,9 +51,8 @@ class AsciiMap(asciiMap: String) {
         nextItem = when {
             validAdjacentItems.isEmpty() -> throw Exception(formatPathBreakErrorMessage(currentItem))
             startIsAmbiguous(currentItem, validAdjacentItems) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
-            isJunction(currentItem, validAdjacentItems) -> findNextItemInJunction(previousItem!!, currentItem, validAdjacentItems)
-            onlyOneNextItemCandidate(validAdjacentItems) -> getTheOnlyRemainingNextItemCandidate(validAdjacentItems)
-            else -> null
+            isJunction(validAdjacentItems) -> findNextItemInJunction(previousItem!!, currentItem, validAdjacentItems)
+            else -> getTheOnlyRemainingNextItemCandidate(validAdjacentItems)
         }
         return nextItem
     }
@@ -80,8 +79,7 @@ class AsciiMap(asciiMap: String) {
         return currentItem.character == startCharacter && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
     }
 
-    private fun isJunction(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>) =
-            currentItem.character != pathCharacterCorner && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
+    private fun isJunction(nextItemCandidates: List<AsciiMapItem>) = nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
 
     private fun itemsHaveSamePosition(itemOne: AsciiMapItem?, itemTwo: AsciiMapItem?) =
             itemOne?.rowIndex == itemTwo?.rowIndex && itemOne?.columnIndex == itemTwo?.columnIndex
@@ -105,9 +103,6 @@ class AsciiMap(asciiMap: String) {
         val nextVerticalPosition = if (previousItem.rowIndex < currentItem.rowIndex) currentItem.rowIndex + 1 else currentItem.rowIndex - 1
         return nextItemCandidates.find { it.rowIndex == nextVerticalPosition }!!
     }
-
-    private fun onlyOneNextItemCandidate(nextItemCandidates: List<AsciiMapItem>) =
-            nextItemCandidates.size == unambiguousNumberOfNextItemCandidates
 
     private fun getTheOnlyRemainingNextItemCandidate(nextItemCandidates: List<AsciiMapItem>) = nextItemCandidates[0]
 
