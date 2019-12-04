@@ -83,12 +83,14 @@ class AsciiMap(asciiMap: String) {
             itemOne?.rowIndex == itemTwo?.rowIndex && itemOne?.columnIndex == itemTwo?.columnIndex
 
     private fun findNextItemInJunction(previousItem: AsciiMapItem, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem {
-        return if (enteredHorizontally(currentItem, previousItem)) findNextHorizontalItem(previousItem, currentItem, nextItemCandidates)
-        else findNextVerticalItem(previousItem, currentItem, nextItemCandidates)
+        return if (enteredHorizontally(previousItem, currentItem))
+            findNextHorizontalItem(previousItem, currentItem, nextItemCandidates)
+        else
+            findNextVerticalItem(previousItem, currentItem, nextItemCandidates)
     }
 
-    private fun enteredHorizontally(currentItem: AsciiMapItem, previousItem: AsciiMapItem?) =
-            currentItem.rowIndex == previousItem?.rowIndex
+    private fun enteredHorizontally(previousItem: AsciiMapItem, currentItem: AsciiMapItem) =
+            currentItem.rowIndex == previousItem.rowIndex
 
     private fun findNextHorizontalItem(previousItem: AsciiMapItem, currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): AsciiMapItem {
         val nextHorizontalPosition = if (previousItem.columnIndex < currentItem.columnIndex) currentItem.columnIndex + 1 else currentItem.columnIndex - 1
