@@ -1,8 +1,13 @@
 import main.AsciiMapFileReader
 import main.AsciiMapFileReader.LETTERS_PLACEHOLDER
 import main.AsciiMapFileReader.PATH_AS_CHARACTERS_PLACEHOLDER
+import main.AsciiMapOutput
+import main.AsciiMapTestData.expectedOutputOne
+import main.AsciiMapTestData.expectedOutputThree
 import main.AsciiMapTestData.expectedOutputTwo
-import main.AsciiMapTestData.testFilePath
+import main.AsciiMapTestData.testFilePathOne
+import main.AsciiMapTestData.testFilePathThree
+import main.AsciiMapTestData.testFilePathTwo
 import org.junit.Test
 import kotlin.test.assertEquals
 import java.io.PrintStream
@@ -22,9 +27,26 @@ class AsciiMapFileReaderTest {
     }
 
     @Test
-    fun processAsciiMapFromFile() {
-        AsciiMapFileReader.readAsciiMapFromFile(testFilePath)
-        assertEquals("$LETTERS_PLACEHOLDER${expectedOutputTwo.letters}\n$PATH_AS_CHARACTERS_PLACEHOLDER${expectedOutputTwo.pathAsCharacters}", outContent.toString())
+    fun processTestMapOne() {
+        AsciiMapFileReader.readAsciiMapFromFile(testFilePathOne)
+        validateReaderOutput(expectedOutputOne)
+    }
+
+    @Test
+    fun processTestMapTwo() {
+        AsciiMapFileReader.readAsciiMapFromFile(testFilePathTwo)
+        validateReaderOutput(expectedOutputTwo)
+    }
+
+
+    @Test
+    fun processTestMapThree() {
+        AsciiMapFileReader.readAsciiMapFromFile(testFilePathThree)
+        validateReaderOutput(expectedOutputThree)
+    }
+
+    private fun validateReaderOutput(asciiMapOutput: AsciiMapOutput) {
+        assertEquals("$LETTERS_PLACEHOLDER${asciiMapOutput.letters}\n$PATH_AS_CHARACTERS_PLACEHOLDER${asciiMapOutput.pathAsCharacters}", outContent.toString())
     }
 
     @After

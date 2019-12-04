@@ -3,7 +3,9 @@ package main
 
 object AsciiMapTestData {
 
-    const val testFilePath = "src/test/ascii_map_test.txt"
+    const val testFilePathOne = "src/test/test_map_1.txt"
+    const val testFilePathTwo = "src/test/test_map_2.txt"
+    const val testFilePathThree = "src/test/test_map_3.txt"
 
     const val emptyMap = ""
     const val mapWithoutStart = "--x"
