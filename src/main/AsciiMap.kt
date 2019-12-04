@@ -52,14 +52,16 @@ class AsciiMap(asciiMap: String) {
         val allAdjacentItems = mutableListOf(leftItem, topItem, rightItem, bottomItem)
         val nextItemCandidates = findNextCandidatesAmongAllAdjacentItems(allAdjacentItems, previousItem)
         nextItem = when {
-            nextItemCandidates.isEmpty() -> throw Exception(formatPathBreakErrorMessage(currentItem))
-            startIsAmbiguous(currentItem, nextItemCandidates) || cornerIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
-            validJunction(currentItem, nextItemCandidates) -> findNextItemInJunction(previousItem!!, currentItem, nextItemCandidates)
-            nextItemCandidates.size == unambiguousNumberOfNextItemCandidates -> getTheOnlyRemainingNextStepCandidate(nextItemCandidates)
+            noValidNextItemCandidates(nextItemCandidates) -> throw Exception(formatPathBreakErrorMessage(currentItem))
+            startIsAmbiguous(currentItem, nextItemCandidates) -> throw Exception(formatPathAmbiguityErrorMessage(currentItem))
+            isJunction(currentItem, nextItemCandidates) -> findNextItemInJunction(previousItem!!, currentItem, nextItemCandidates)
+            onlyOneNextItemCandidate(nextItemCandidates) -> getTheOnlyRemainingNextItemCandidate(nextItemCandidates)
             else -> null
         }
         return nextItem
     }
+
+    private fun noValidNextItemCandidates(nextItemCandidates: List<AsciiMapItem>) = nextItemCandidates.isEmpty()
 
     private fun findNextCandidatesAmongAllAdjacentItems(allAdjacentItems: List<AsciiMapItem?>, previousItem: AsciiMapItem?): List<AsciiMapItem> {
         val nextItemCandidates = mutableListOf<AsciiMapItem>()
@@ -72,11 +74,7 @@ class AsciiMap(asciiMap: String) {
         return currentItem.character == startCharacter && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
     }
 
-    private fun cornerIsAmbiguous(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>): Boolean {
-        return currentItem.character == pathCharacterCorner && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
-    }
-
-    private fun validJunction(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>) =
+    private fun isJunction(currentItem: AsciiMapItem, nextItemCandidates: List<AsciiMapItem>) =
             currentItem.character != pathCharacterCorner && nextItemCandidates.size > unambiguousNumberOfNextItemCandidates
 
     private fun itemsHaveSamePosition(itemOne: AsciiMapItem?, itemTwo: AsciiMapItem?) =
@@ -102,7 +100,10 @@ class AsciiMap(asciiMap: String) {
         return nextItemCandidates.find { it.rowIndex == nextVerticalPosition }!!
     }
 
-    private fun getTheOnlyRemainingNextStepCandidate(nextItemCandidates: List<AsciiMapItem>) = nextItemCandidates[0]
+    private fun onlyOneNextItemCandidate(nextItemCandidates: List<AsciiMapItem>) =
+            nextItemCandidates.size == unambiguousNumberOfNextItemCandidates
+
+    private fun getTheOnlyRemainingNextItemCandidate(nextItemCandidates: List<AsciiMapItem>) = nextItemCandidates[0]
 
     private fun isPathItem(asciiMapItem: AsciiMapItem?) =
             asciiMapItem != null &&
