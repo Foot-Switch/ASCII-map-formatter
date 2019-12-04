@@ -127,6 +127,7 @@ class AsciiMap(asciiMap: String) {
         }
         var letters = ""
         letterItems.forEach { asciiMapItem -> letters += asciiMapItem.character }
+        if (letters.isBlank()) letters = AsciiMapErrorFormatter.NO_LETTERS_MESSAGE
         return AsciiMapOutput(letters, pathAsCharacters)
     }
 

@@ -57,6 +57,12 @@ class AsciiMapTest {
     }
 
     @Test
+    fun formatOutputWithoutLetters() {
+        val asciiMap = AsciiMap(AsciiMapTestData.mapWithoutLetters)
+        assertEquals(AsciiMapTestData.expectedOutputWithoutLetters, asciiMap.output)
+    }
+
+    @Test
     fun formatOutputOne() {
         val asciiMap = AsciiMap(AsciiMapTestData.mapOne)
         assertEquals(AsciiMapTestData.expectedOutputOne, asciiMap.output)

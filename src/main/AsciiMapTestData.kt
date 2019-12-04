@@ -22,6 +22,10 @@ object AsciiMapTestData {
                     "          |  \n" +
                     "  x-------+   "
 
+    const val mapWithoutLetters = "@---x"
+
+    val expectedOutputWithoutLetters = AsciiMapOutput(AsciiMapErrorFormatter.NO_LETTERS_MESSAGE, mapWithoutLetters)
+
     const val mapOne =
             "\n" +
                     "  @---A---+\n" +

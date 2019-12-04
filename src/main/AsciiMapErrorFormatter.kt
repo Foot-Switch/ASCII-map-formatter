@@ -7,6 +7,7 @@ object AsciiMapErrorFormatter {
     private const val PATH_BREAKS_ERROR_MESSAGE = "The path breaks on character [$CHARACTER_PLACEHOLDER] at position [$POSITION_PLACEHOLDER] because no adjacent items are part of a valid path."
     private const val PATH_AMBIGUITY_ERROR_MESSAGE = "The path breaks on character [$CHARACTER_PLACEHOLDER] at position [$POSITION_PLACEHOLDER] because adjacent items describe an ambiguous path."
 
+    const val NO_LETTERS_MESSAGE = "The path contains no letters."
     const val EMPTY_INPUT_ERROR_MESSAGE = "Input cannot be empty"
     const val START_CHARACTER_ERROR_MESSAGE = "Input must have exactly one start character marked with \"@\"."
     const val END_CHARACTER_ERROR_MESSAGE = "Input must have exactly one end character marked with \"x\"."
