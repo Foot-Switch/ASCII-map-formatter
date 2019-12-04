@@ -10,6 +10,6 @@ object AsciiMapFileReader {
     fun readAsciiMapFromFile(fileName: String) {
         val mapFromFile = File(fileName).inputStream().readBytes().toString(Charsets.UTF_8)
         val asciiMap = AsciiMap(mapFromFile)
-        print("$LETTERS_PLACEHOLDER${asciiMap.output?.letters}\n$PATH_AS_CHARACTERS_PLACEHOLDER${asciiMap.output?.pathAsCharacters}")
+        print("$LETTERS_PLACEHOLDER${asciiMap.output.letters}\n$PATH_AS_CHARACTERS_PLACEHOLDER${asciiMap.output.pathAsCharacters}")
     }
 }
