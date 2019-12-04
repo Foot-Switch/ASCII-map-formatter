@@ -16,51 +16,39 @@ class AsciiMap(asciiMap: String) {
 
     private val unambiguousNumberOfNextItemCandidates = 1
 
-    val items: List<AsciiMapItem> = AsciiMapItemSerializer.serializeAsciiMapItems(asciiMap)
-
+    private val allItems: List<AsciiMapItem> = AsciiMapItemSerializer.serializeAsciiMapItems(asciiMap)
     private val pathItems = mutableListOf<AsciiMapItem>()
-    var output: AsciiMapOutput? = null
 
-    init {
-        output = buildOutput()
-    }
+    val output = buildOutput()
 
     private fun buildOutput(): AsciiMapOutput {
-        val startItem = items.find { it.character == startCharacter }
-        val endItem = items.find { it.character == endCharacter }
+        buildItemPath()
+        return formatOutputFromItemPath()
+    }
+
+    private fun buildItemPath() {
+        val startItem = allItems.find { it.character == startCharacter }
+        val endItem = allItems.find { it.character == endCharacter }
         when {
             startItem == null -> throw Exception(NO_START_CHARACTER_ERROR_MESSAGE)
             endItem == null -> throw Exception(NO_END_CHARACTER_ERROR_MESSAGE)
-            else -> appendNextCharacter(null, startItem)
+            else -> addNextItemToPath(null, startItem)
         }
-        val letterItems = mutableListOf<AsciiMapItem>()
-        var pathAsCharacters = ""
-        pathItems.forEach { asciiMapItem ->
-            pathAsCharacters += asciiMapItem.character
-            if (isPathLetterCharacter(asciiMapItem) && !letterItems.contains(asciiMapItem))
-                letterItems.add(asciiMapItem)
-        }
-        var letters = ""
-        letterItems.forEach { asciiMapItem -> letters += asciiMapItem.character }
-        return AsciiMapOutput(letters, pathAsCharacters)
     }
 
-    private fun isPathLetterCharacter(asciiMapItem: AsciiMapItem) =
-            asciiMapItem.character.single().isLetter() && asciiMapItem.character != endCharacter
-
-    private fun appendNextCharacter(previousItem: AsciiMapItem?, currentItem: AsciiMapItem) {
+    private fun addNextItemToPath(previousItem: AsciiMapItem?, currentItem: AsciiMapItem) {
         pathItems.add(currentItem)
         if (currentItem.character == endCharacter) return
         val nextItem = findNextItem(previousItem, currentItem) ?: return
-        appendNextCharacter(currentItem, nextItem)
+        addNextItemToPath(currentItem, nextItem)
     }
 
     private fun findNextItem(previousItem: AsciiMapItem?, currentItem: AsciiMapItem): AsciiMapItem? {
         val nextItem: AsciiMapItem?
-        val leftItem = items.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex - 1 }
-        val topItem = items.find { it.rowIndex == currentItem.rowIndex - 1 && it.columnIndex == currentItem.columnIndex }
-        val rightItem = items.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex + 1 }
-        val bottomItem = items.find { it.rowIndex == currentItem.rowIndex + 1 && it.columnIndex == currentItem.columnIndex }
+        val leftItem = allItems.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex - 1 }
+        val topItem = allItems.find { it.rowIndex == currentItem.rowIndex - 1 && it.columnIndex == currentItem.columnIndex }
+        val rightItem = allItems.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex + 1 }
+        val bottomItem = allItems.find { it.rowIndex == currentItem.rowIndex + 1 && it.columnIndex == currentItem.columnIndex }
         val allAdjacentItems = mutableListOf(leftItem, topItem, rightItem, bottomItem)
         val nextItemCandidates = findNextCandidatesAmongAllAdjacentItems(allAdjacentItems, previousItem)
         nextItem = when {
@@ -121,5 +109,21 @@ class AsciiMap(asciiMap: String) {
                             || asciiMapItem.character.single().isLetter()
                             || asciiMapItem.character == pathCharacterCorner
                             || asciiMapItem.character == endCharacter)
+
+    private fun formatOutputFromItemPath(): AsciiMapOutput {
+        val letterItems = mutableListOf<AsciiMapItem>()
+        var pathAsCharacters = ""
+        pathItems.forEach { asciiMapItem ->
+            pathAsCharacters += asciiMapItem.character
+            if (isPathLetterCharacter(asciiMapItem) && !letterItems.contains(asciiMapItem))
+                letterItems.add(asciiMapItem)
+        }
+        var letters = ""
+        letterItems.forEach { asciiMapItem -> letters += asciiMapItem.character }
+        return AsciiMapOutput(letters, pathAsCharacters)
+    }
+
+    private fun isPathLetterCharacter(asciiMapItem: AsciiMapItem) =
+            asciiMapItem.character.single().isLetter() && asciiMapItem.character != endCharacter
 
 }
