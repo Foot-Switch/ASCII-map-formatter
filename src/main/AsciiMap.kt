@@ -46,7 +46,7 @@ class AsciiMap(asciiMap: String) {
     private fun findNextItem(previousItem: AsciiMapItem?, currentItem: AsciiMapItem): AsciiMapItem? {
         val nextItem: AsciiMapItem?
         val allAdjacentItems = findAdjacentItems(currentItem)
-        val validAdjacentItems = findValidAdjacentItems(allAdjacentItems)
+        val validAdjacentItems = removeNonPathItems(allAdjacentItems)
         removePreviousItemFromValidAdjacentItems(previousItem, validAdjacentItems)
         nextItem = when {
             validAdjacentItems.isEmpty() -> throw Exception(formatPathBreakErrorMessage(currentItem))
@@ -66,7 +66,7 @@ class AsciiMap(asciiMap: String) {
         return mutableListOf(leftItem, topItem, rightItem, bottomItem)
     }
 
-    private fun findValidAdjacentItems(allAdjacentItems: List<AsciiMapItem?>): MutableList<AsciiMapItem> {
+    private fun removeNonPathItems(allAdjacentItems: List<AsciiMapItem?>): MutableList<AsciiMapItem> {
         val nextItemCandidates = mutableListOf<AsciiMapItem>()
         allAdjacentItems.forEach { adjacentItem -> if (isPathItem(adjacentItem)) nextItemCandidates.add(adjacentItem!!) }
         return nextItemCandidates
