@@ -1,22 +1,17 @@
 package main
 
-object AsciiMapNavigator {
+class AsciiMapNavigator(asciiMapInput: String) {
 
-    const val startCharacter = "@"
-    const val endCharacter = "x"
-    const val pathCharacterHorizontal = "-"
-    const val pathCharacterVertical = "|"
-    const val pathCharacterCorner = "+"
+    private val startCharacter = "@"
+    private val endCharacter = "x"
+    private val pathCharacterHorizontal = "-"
+    private val pathCharacterVertical = "|"
+    private val pathCharacterCorner = "+"
 
-    private const val unambiguousNumberOfNextItemCandidates = 1
+    private val unambiguousNumberOfNextItemCandidates = 1
 
-    private var allItems: List<AsciiMapItem>? = null
-    private var pathItems: MutableList<AsciiMapItem>? = null
-
-    fun assignMap(asciiMapInput: String) {
-        allItems = AsciiMapItemSerializer.serializeAsciiMapItems(asciiMapInput)
-        pathItems = mutableListOf()
-    }
+    private val allItems: List<AsciiMapItem> = AsciiMapItemSerializer.serializeAsciiMapItems(asciiMapInput)
+    private var pathItems = mutableListOf<AsciiMapItem>()
 
     fun findNextItem(allMapItems: List<AsciiMapItem>?, previousItem: AsciiMapItem?, currentItem: AsciiMapItem): AsciiMapItem? {
         val nextItem: AsciiMapItem?
