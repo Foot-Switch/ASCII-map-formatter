@@ -110,14 +110,14 @@ class AsciiMapNavigatorTest {
     }
 
     @Test
-    fun findValidItems() {
+    fun filterValidItems() {
         val previousItem = AsciiMapItem("+", 0, 6)
         val leftItem = AsciiMapItem(" ", 1, 5)
         val topItem = AsciiMapItem("+", 0, 6)
         val rightItem = AsciiMapItem(" ", 1, 7)
         val bottomItem = AsciiMapItem("|", 2, 6)
         val items = listOf(leftItem, topItem, rightItem, bottomItem)
-        assertEquals(listOf(bottomItem), asciiMapNavigator.findValidItems(previousItem, items))
+        assertEquals(listOf(bottomItem), asciiMapNavigator.filterValidItems(previousItem, items))
     }
 
     @Test
