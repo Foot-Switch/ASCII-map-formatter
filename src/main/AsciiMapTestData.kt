@@ -11,7 +11,6 @@ object AsciiMapTestData {
     const val mapWithoutStart = "--x"
     const val mapWithMultipleStart = "@-@-@-x"
     const val mapWithoutEnd = "@--"
-    const val mapWithMultipleEnd = "@--x--x--x"
     const val brokenPathMap = "@  --x"
     const val ambiguousStartMap = "--@--x"
 

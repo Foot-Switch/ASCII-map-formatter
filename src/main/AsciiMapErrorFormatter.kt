@@ -10,7 +10,7 @@ object AsciiMapErrorFormatter {
     const val NO_LETTERS_MESSAGE = "The path contains no letters."
     const val EMPTY_INPUT_ERROR_MESSAGE = "Input cannot be empty"
     const val START_CHARACTER_ERROR_MESSAGE = "Input must have exactly one start character marked with \"@\"."
-    const val END_CHARACTER_ERROR_MESSAGE = "Input must have exactly one end character marked with \"x\"."
+    const val END_CHARACTER_ERROR_MESSAGE = "Input must have at least one end character marked with \"x\"."
 
     fun formatPathBreakErrorMessage(asciiMapItem: AsciiMapItem): String {
         val messageWithReplacedCharacter = PATH_BREAKS_ERROR_MESSAGE.replace(CHARACTER_PLACEHOLDER, asciiMapItem.character)
