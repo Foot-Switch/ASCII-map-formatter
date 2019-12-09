@@ -10,12 +10,12 @@ class AsciiMapNavigator(asciiMapInput: String) {
 
     private val unambiguousNumberOfNextItemCandidates = 1
 
-    private val allItems: List<AsciiMapItem> = AsciiMapItemSerializer.serializeAsciiMapItems(asciiMapInput)
+    private val allMapItems: List<AsciiMapItem> = AsciiMapItemSerializer.serializeAsciiMapItems(asciiMapInput)
     private var pathItems = mutableListOf<AsciiMapItem>()
 
-    fun findNextItem(allMapItems: List<AsciiMapItem>?, previousItem: AsciiMapItem?, currentItem: AsciiMapItem): AsciiMapItem? {
+    fun findNextItem(previousItem: AsciiMapItem?, currentItem: AsciiMapItem): AsciiMapItem? {
         val nextItem: AsciiMapItem?
-        val allAdjacentItems = findAdjacentItems(allMapItems, currentItem)
+        val allAdjacentItems = findAdjacentItems(currentItem)
         val validAdjacentItems = removeNonPathItems(allAdjacentItems)
         removePreviousItemFromValidAdjacentItems(previousItem, validAdjacentItems)
         nextItem = when {
@@ -27,11 +27,11 @@ class AsciiMapNavigator(asciiMapInput: String) {
         return nextItem
     }
 
-    fun findAdjacentItems(allMapItems: List<AsciiMapItem>?, currentItem: AsciiMapItem): MutableList<AsciiMapItem?> {
-        val leftItem = allMapItems?.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex - 1 }
-        val topItem = allMapItems?.find { it.rowIndex == currentItem.rowIndex - 1 && it.columnIndex == currentItem.columnIndex }
-        val rightItem = allMapItems?.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex + 1 }
-        val bottomItem = allMapItems?.find { it.rowIndex == currentItem.rowIndex + 1 && it.columnIndex == currentItem.columnIndex }
+    fun findAdjacentItems(currentItem: AsciiMapItem): MutableList<AsciiMapItem?> {
+        val leftItem = allMapItems.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex - 1 }
+        val topItem = allMapItems.find { it.rowIndex == currentItem.rowIndex - 1 && it.columnIndex == currentItem.columnIndex }
+        val rightItem = allMapItems.find { it.rowIndex == currentItem.rowIndex && it.columnIndex == currentItem.columnIndex + 1 }
+        val bottomItem = allMapItems.find { it.rowIndex == currentItem.rowIndex + 1 && it.columnIndex == currentItem.columnIndex }
         return mutableListOf(leftItem, topItem, rightItem, bottomItem)
     }
 
@@ -88,19 +88,19 @@ class AsciiMapNavigator(asciiMapInput: String) {
                             || asciiMapItem.character == endCharacter)
 
     fun buildItemPath() {
-        val startItems = allItems?.filter { it.character == startCharacter }
-        val endItems = allItems?.filter { it.character == endCharacter }
+        val startItems = allMapItems.filter { it.character == startCharacter }
+        val endItems = allMapItems.filter { it.character == endCharacter }
         when {
-            startItems?.size != 1 -> throw Exception(AsciiMapErrorFormatter.START_CHARACTER_ERROR_MESSAGE)
-            endItems?.size != 1 -> throw Exception(AsciiMapErrorFormatter.END_CHARACTER_ERROR_MESSAGE)
+            startItems.size != 1 -> throw Exception(AsciiMapErrorFormatter.START_CHARACTER_ERROR_MESSAGE)
+            endItems.size != 1 -> throw Exception(AsciiMapErrorFormatter.END_CHARACTER_ERROR_MESSAGE)
             else -> addNextItemToPath(null, startItems[0])
         }
     }
 
     fun addNextItemToPath(previousItem: AsciiMapItem?, currentItem: AsciiMapItem) {
-        pathItems?.add(currentItem)
+        pathItems.add(currentItem)
         if (currentItem.character == endCharacter) return
-        val nextItem = findNextItem(allItems, previousItem, currentItem) ?: return
+        val nextItem = findNextItem(previousItem, currentItem) ?: return
         addNextItemToPath(currentItem, nextItem)
     }
 
