@@ -38,7 +38,6 @@ class AsciiMapFileReaderTest {
         validateReaderOutput(expectedOutputTwo)
     }
 
-
     @Test
     fun processTestMapThree() {
         AsciiMapFileReader.readAsciiMapFromFile(testFilePathThree)

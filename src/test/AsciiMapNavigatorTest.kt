@@ -110,14 +110,11 @@ class AsciiMapNavigatorTest {
     }
 
     @Test
-    fun filterValidItems() {
+    fun findValidAdjacentItems() {
         val previousItem = AsciiMapItem("+", 0, 6)
-        val leftItem = AsciiMapItem(" ", 1, 5)
-        val topItem = AsciiMapItem("+", 0, 6)
-        val rightItem = AsciiMapItem(" ", 1, 7)
+        val currentItem = AsciiMapItem("B", 1, 6)
         val bottomItem = AsciiMapItem("|", 2, 6)
-        val items = listOf(leftItem, topItem, rightItem, bottomItem)
-        assertEquals(listOf(bottomItem), asciiMapNavigator.filterValidItems(previousItem, items))
+        assertEquals(listOf(bottomItem), asciiMapNavigator.findValidAdjacentItems(previousItem, currentItem))
     }
 
     @Test
@@ -136,5 +133,76 @@ class AsciiMapNavigatorTest {
         assertTrue(ambiguousAsciiMapNavigator.startIsAmbiguous())
         val noStartAsciiMapNavigator = AsciiMapNavigator(noStartOrEndMap)
         assertFalse(noStartAsciiMapNavigator.startIsAmbiguous())
+    }
+
+    @Test
+    fun isJunction() {
+        assertFalse(asciiMapNavigator.isJunction(AsciiMapItem("-", 0, 5), AsciiMapItem("+", 0, 6)))
+        assertTrue(asciiMapNavigator.isJunction(AsciiMapItem("-", 6, 2), AsciiMapItem("E", 6, 3)))
+    }
+
+    @Test
+    fun isSameItem() {
+        val itemOne = AsciiMapItem("-", 0, 0)
+        val itemTwo = AsciiMapItem("-", 1, 1)
+        assertTrue(asciiMapNavigator.isSameItem(itemOne, itemOne))
+        assertFalse(asciiMapNavigator.isSameItem(itemOne, itemTwo))
+    }
+
+    @Test
+    fun findNextItemInJunction() {
+        val previousItem = AsciiMapItem("-", 6, 2)
+        val currentItem = AsciiMapItem("K", 6, 3)
+        val nextItem = AsciiMapItem("-", 6, 4)
+        assertEquals(nextItem, asciiMapNavigator.findNextItemInJunction(previousItem, currentItem))
+    }
+
+    @Test
+    fun enteredHorizontally() {
+        val previousHorizontalItem = AsciiMapItem("-", 6, 2)
+        val previousVerticalItem = AsciiMapItem("|", 5, 3)
+        val currentItem = AsciiMapItem("K", 6, 3)
+        assertTrue(asciiMapNavigator.enteredHorizontally(previousHorizontalItem, currentItem))
+        assertFalse(asciiMapNavigator.enteredHorizontally(previousVerticalItem, currentItem))
+    }
+
+    @Test
+    fun findNextHorizontalItem() {
+        val previousHorizontalItem = AsciiMapItem("-", 6, 2)
+        val currentItem = AsciiMapItem("K", 6, 3)
+        val nextHorizontalItem = AsciiMapItem("-", 6, 4)
+        assertEquals(nextHorizontalItem, asciiMapNavigator.findNextHorizontalItem(previousHorizontalItem, currentItem))
+    }
+
+    @Test
+    fun findNextVerticalItem() {
+        val previousVerticalItem = AsciiMapItem("B", 1, 6)
+        val currentItem = AsciiMapItem("|", 2, 6)
+        val nextVerticalItem = AsciiMapItem("|", 3, 6)
+        assertEquals(nextVerticalItem, asciiMapNavigator.findNextVerticalItem(previousVerticalItem, currentItem))
+    }
+
+    @Test
+    fun getTheOnlyRemainingNextItemCandidate() {
+        val onlyItem = AsciiMapItem("a", 0, 0)
+        val adjacentItems = listOf(onlyItem)
+        assertEquals(onlyItem, asciiMapNavigator.getTheOnlyRemainingNextItemCandidate(adjacentItems))
+    }
+
+    @Test
+    fun isValidPathItem() {
+        assertFalse(asciiMapNavigator.isValidPathItem(AsciiMapItem("*", 0, 0)))
+        assertTrue(asciiMapNavigator.isValidPathItem(AsciiMapItem("a", 0, 0)))
+        assertTrue(asciiMapNavigator.isValidPathItem(AsciiMapItem("-", 0, 0)))
+        assertTrue(asciiMapNavigator.isValidPathItem(AsciiMapItem("|", 0, 0)))
+        assertTrue(asciiMapNavigator.isValidPathItem(AsciiMapItem("x", 0, 0)))
+        assertTrue(asciiMapNavigator.isValidPathItem(AsciiMapItem("@", 0, 0)))
+    }
+
+    @Test
+    fun isPathLetterCharacter() {
+        assertTrue(asciiMapNavigator.isLetterItem(AsciiMapItem("a", 0, 0)))
+        assertFalse(asciiMapNavigator.isLetterItem(AsciiMapItem("-", 0, 0)))
+        assertFalse(asciiMapNavigator.isLetterItem(AsciiMapItem("*", 0, 0)))
     }
 }
