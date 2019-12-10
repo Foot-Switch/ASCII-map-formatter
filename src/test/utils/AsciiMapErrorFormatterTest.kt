@@ -1,5 +1,7 @@
-import main.AsciiMapErrorFormatter
-import main.AsciiMapItem
+package utils
+
+import main.utils.AsciiMapErrorFormatter
+import main.model.AsciiMapItem
 import org.junit.Test
 
 import org.junit.Assert.*

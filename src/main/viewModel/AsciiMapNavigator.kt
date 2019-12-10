@@ -1,4 +1,9 @@
-package main
+package main.viewModel
+
+import main.utils.AsciiMapErrorFormatter
+import main.utils.AsciiMapItemSerializer
+import main.model.AsciiMapItem
+import main.model.AsciiMapOutput
 
 class AsciiMapNavigator(asciiMapInput: String) {
 

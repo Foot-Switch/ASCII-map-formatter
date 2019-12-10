@@ -1,31 +1,18 @@
-package main
+package utils
 
+import main.utils.AsciiMapErrorFormatter.EMPTY_INPUT_ERROR_MESSAGE
+import main.model.AsciiMapItem
+import main.utils.AsciiMapItemSerializer
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.ExpectedException
+import kotlin.test.assertEquals
 
-object AsciiMapTestData {
+class AsciiMapItemSerializerTest {
 
-    const val testFilePathOne = "src/test/test_map_1.txt"
-    const val testFilePathTwo = "src/test/test_map_2.txt"
-    const val testFilePathThree = "src/test/test_map_3.txt"
+    private val emptyMap = ""
 
-    const val emptyMap = ""
-    const val mapWithoutStart = "--x"
-    const val mapWithMultipleStart = "@-@-@-x"
-    const val mapWithoutEnd = "@--"
-    const val brokenPathMap = "@  --x"
-    const val ambiguousStartMap = "--@--x"
-
-    const val ambiguousJunctionMap =
-            "\n" +
-                    "          |  \n" +
-                    "  @---A---+  \n" +
-                    "          |  \n" +
-                    "  x-------+   "
-
-    const val mapWithoutLetters = "@---x"
-
-    val expectedOutputWithoutLetters = AsciiMapOutput(AsciiMapErrorFormatter.NO_LETTERS_MESSAGE, mapWithoutLetters)
-
-    const val mapOne =
+    private val mapOne =
             "\n" +
                     "  @---A---+\n" +
                     "          |\n" +
@@ -33,7 +20,7 @@ object AsciiMapTestData {
                     "      |   |\n" +
                     "      +---+"
 
-    val expectedItemsOne = listOf(
+    private val expectedItemsOne = listOf(
             AsciiMapItem("@", 0, 0),
             AsciiMapItem("-", 0, 1),
             AsciiMapItem("-", 0, 2),
@@ -81,9 +68,7 @@ object AsciiMapTestData {
             AsciiMapItem("+", 4, 8)
     )
 
-    val expectedOutputOne = AsciiMapOutput("ACB", "@---A---+|C|+---+|+-B-x")
-
-    const val mapTwo =
+    private val mapTwo =
             "\n" +
                     "@\n" +
                     "| C----+\n" +
@@ -93,7 +78,7 @@ object AsciiMapTestData {
                     "  |      |\n" +
                     "  +---D--+"
 
-    val expectedItemsTwo = listOf(
+    private val expectedItemsTwo = listOf(
             AsciiMapItem("@", 0, 0),
             AsciiMapItem(" ", 0, 1),
             AsciiMapItem(" ", 0, 2),
@@ -166,9 +151,7 @@ object AsciiMapTestData {
             AsciiMapItem("+", 6, 9)
     )
 
-    val expectedOutputTwo = AsciiMapOutput("ABCD", "@|A+---B--+|+----C|-||+---D--+|x")
-
-    const val mapThree =
+    private val mapThree =
             "\n" +
                     "  @---+\n" +
                     "      B\n" +
@@ -180,7 +163,7 @@ object AsciiMapTestData {
                     "   |     |\n" +
                     "   +--F--+"
 
-    val expectedItemsThree = listOf(
+    private val expectedItemsThree = listOf(
             AsciiMapItem(" ", 0, 0),
             AsciiMapItem(" ", 0, 1),
             AsciiMapItem("@", 0, 2),
@@ -273,5 +256,28 @@ object AsciiMapTestData {
             AsciiMapItem("+", 8, 9)
     )
 
-    val expectedOutputThree = AsciiMapOutput("BEEFCAKE", "@---+B||E--+|E|+--F--+|C|||A--|-----K|||+--E--Ex")
+    @Rule
+    @JvmField
+    var exceptionRule: ExpectedException = ExpectedException.none()
+
+    @Test
+    fun throwExceptionForEmptyInput() {
+        exceptionRule.expectMessage(EMPTY_INPUT_ERROR_MESSAGE)
+        AsciiMapItemSerializer.serializeAsciiMapItems(emptyMap)
+    }
+
+    @Test
+    fun formatAsciiMapItemsOne() {
+        assertEquals(expectedItemsOne, AsciiMapItemSerializer.serializeAsciiMapItems(mapOne))
+    }
+
+    @Test
+    fun formatAsciiMapItemsTwo() {
+        assertEquals(expectedItemsTwo, AsciiMapItemSerializer.serializeAsciiMapItems(mapTwo))
+    }
+
+    @Test
+    fun formatAsciiMapItemsThree() {
+        assertEquals(expectedItemsThree, AsciiMapItemSerializer.serializeAsciiMapItems(mapThree))
+    }
 }

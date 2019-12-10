@@ -1,4 +1,6 @@
-package main
+package main.model
+
+import main.viewModel.AsciiMapNavigator
 
 class AsciiMap(private val asciiMapInput: String) {
 
