@@ -1,4 +1,4 @@
-package main
+package main.view
 
 import main.model.AsciiMap
 import java.io.File
