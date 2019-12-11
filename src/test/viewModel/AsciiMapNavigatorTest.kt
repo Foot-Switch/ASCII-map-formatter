@@ -1,16 +1,19 @@
 package viewModel
 
-import model.AsciiMap
 import model.AsciiMapItem
 import model.AsciiMapOutput
+import org.junit.After
 import utils.AsciiMapErrorFormatter
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
+import java.io.PrintStream
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import java.io.ByteArrayOutputStream
+
 
 class AsciiMapNavigatorTest {
 
@@ -60,51 +63,55 @@ class AsciiMapNavigatorTest {
 
     private val simpleMapOutput = AsciiMapOutput("GG", simpleMap)
 
+    private val outContent = ByteArrayOutputStream()
+    private val originalOut = System.out
+
     @Before
     fun setUp() {
+        System.setOut(PrintStream(outContent))
         asciiMapNavigator = AsciiMapNavigator(asciiMapInput)
     }
 
     @Test
     fun throwExceptionWhenNoStartCharacterIsPresent() {
         exceptionRule.expectMessage(AsciiMapErrorFormatter.START_CHARACTER_ERROR_MESSAGE)
-        val asciiMap = AsciiMap(mapWithoutStart)
-        asciiMap.getOutput()
+        val asciiMapNavigator = AsciiMapNavigator(mapWithoutStart)
+        asciiMapNavigator.buildOutput()
     }
 
     @Test
     fun throwExceptionWhenNoEndCharacterIsPresent() {
         exceptionRule.expectMessage(AsciiMapErrorFormatter.END_CHARACTER_ERROR_MESSAGE)
-        val asciiMap = AsciiMap(mapWithoutEnd)
-        asciiMap.getOutput()
+        val asciiMap = AsciiMapNavigator(mapWithoutEnd)
+        asciiMap.buildOutput()
     }
 
     @Test
     fun throwExceptionWhenMultipleStartCharactersArePresent() {
         exceptionRule.expectMessage(AsciiMapErrorFormatter.START_CHARACTER_ERROR_MESSAGE)
-        val asciiMap = AsciiMap(mapWithMultipleStart)
-        asciiMap.getOutput()
+        val asciiMapNavigator = AsciiMapNavigator(mapWithMultipleStart)
+        asciiMapNavigator.buildOutput()
     }
 
     @Test
     fun throwExceptionWhenPathBreaks() {
         exceptionRule.expectMessage(AsciiMapErrorFormatter.formatPathBreakErrorMessage(AsciiMapItem("@", 0, 0)))
-        val asciiMap = AsciiMap(brokenPathMap)
-        asciiMap.getOutput()
+        val asciiMapNavigator = AsciiMapNavigator(brokenPathMap)
+        asciiMapNavigator.buildOutput()
     }
 
     @Test
     fun throwExceptionWhenStartIsAmbiguous() {
         exceptionRule.expectMessage(AsciiMapErrorFormatter.formatPathAmbiguityErrorMessage(AsciiMapItem("@", 0, 2)))
-        val asciiMap = AsciiMap(ambiguousStartMap)
-        asciiMap.getOutput()
+        val asciiMapNavigator = AsciiMapNavigator(ambiguousStartMap)
+        asciiMapNavigator.buildOutput()
     }
 
     @Test
     fun throwExceptionWhenJunctionIsAmbiguous() {
         exceptionRule.expectMessage(AsciiMapErrorFormatter.formatPathAmbiguityErrorMessage(AsciiMapItem("+", 1, 8)))
-        val asciiMap = AsciiMap(ambiguousJunctionMap)
-        asciiMap.getOutput()
+        val asciiMapNavigator = AsciiMapNavigator(ambiguousJunctionMap)
+        asciiMapNavigator.buildOutput()
     }
 
     @Test
@@ -259,5 +266,17 @@ class AsciiMapNavigatorTest {
     fun buildOutput() {
         val asciiMapNavigator = AsciiMapNavigator(simpleMap)
         assertEquals(simpleMapOutput, asciiMapNavigator.buildOutput())
+    }
+
+    @Test
+    fun printOutput() {
+        val asciiMapNavigator = AsciiMapNavigator(simpleMap)
+        asciiMapNavigator.printOutput()
+        assertEquals("Letters: ${asciiMapNavigator.buildOutput().letters}\nPath as characters: ${asciiMapNavigator.buildOutput().pathAsCharacters}", outContent.toString())
+    }
+
+    @After
+    fun tearDown() {
+        System.setOut(originalOut)
     }
 }

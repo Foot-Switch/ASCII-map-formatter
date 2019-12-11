@@ -10,16 +10,16 @@ object AsciiMapItemSerializer {
         val asciiMapItems = mutableListOf<AsciiMapItem>()
         if (rowsWithData.isEmpty()) throw Exception(EMPTY_INPUT_ERROR_MESSAGE)
         else {
-            val rowsWithDataWithoutEmptyLeadingColumns = removeEmptyLeadingColumns(rowsWithData)
-            val rowsWithAddedTrailingSpacesToMatchLongestRow = addTrailingSpacesToMatchLongestRow(rowsWithDataWithoutEmptyLeadingColumns)
+            val rowsWithoutEmptyLeadingColumns = getRowsWithoutEmptyLeadingColumns(rowsWithData)
+            val rowsWithAddedTrailingSpacesToMatchLongestRow = addTrailingSpacesToMatchLongestRow(rowsWithoutEmptyLeadingColumns)
             asciiMapItems.addAll(createAsciiMapItems(rowsWithAddedTrailingSpacesToMatchLongestRow))
         }
         return asciiMapItems
     }
 
-    private fun removeBlankRows(asciiMap: String) = asciiMap.lines().filter { it.isNotBlank() }
+    fun removeBlankRows(asciiMap: String) = asciiMap.lines().filter { it.isNotBlank() }
 
-    private fun removeEmptyLeadingColumns(rows: List<String>): List<String> {
+    fun getRowsWithoutEmptyLeadingColumns(rows: List<String>): List<String> {
         var firstNotEmptyColumnIndex = rows[0].indexOfFirst { it.toString().isNotBlank() }
         rows.forEach { row ->
             val indexOfFirstNotBlankInRow = row.indexOfFirst { it.toString().isNotBlank() }
@@ -28,11 +28,11 @@ object AsciiMapItemSerializer {
         return rows.map { it.removeRange(0, firstNotEmptyColumnIndex) }
     }
 
-    private fun addTrailingSpacesToMatchLongestRow(rows: List<String>): List<String> {
+    fun addTrailingSpacesToMatchLongestRow(rows: List<String>): List<String> {
         return rows.map { row -> row.padEnd(longestRowLength(rows)) }
     }
 
-    private fun createAsciiMapItems(rows: List<String>): List<AsciiMapItem> {
+    fun createAsciiMapItems(rows: List<String>): List<AsciiMapItem> {
         val numberOfRows = rows.size
         val numberOfColumns = longestRowLength(rows)
         val asciiMapItems = mutableListOf<AsciiMapItem>()
@@ -46,5 +46,5 @@ object AsciiMapItemSerializer {
         return asciiMapItems
     }
 
-    private fun longestRowLength(rows: List<String>) = rows.maxBy { it.length }!!.length
+    fun longestRowLength(rows: List<String>) = rows.maxBy { it.length }!!.length
 }

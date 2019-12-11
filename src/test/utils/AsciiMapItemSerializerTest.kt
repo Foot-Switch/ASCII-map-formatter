@@ -9,6 +9,10 @@ import kotlin.test.assertEquals
 
 class AsciiMapItemSerializerTest {
 
+    @Rule
+    @JvmField
+    var exceptionRule: ExpectedException = ExpectedException.none()
+
     private val emptyMap = ""
 
     private val mapOne =
@@ -255,14 +259,55 @@ class AsciiMapItemSerializerTest {
             AsciiMapItem("+", 8, 9)
     )
 
-    @Rule
-    @JvmField
-    var exceptionRule: ExpectedException = ExpectedException.none()
+    private val blankRowMap =
+            "\n" +
+                    "\n" +
+                    "\n" +
+                    "@-x"
+
+
+    private val emptyLeadingColumnsMap = "    @-x"
+    private val properlyFormattedMap = "@-x"
+
+    private val mapWithVariousRowLengths =
+            "@-+\n" +
+                    "   |   "
+
+    private val mapWithEqualRowLengths =
+            "@-+    \n" +
+                    "   |   "
 
     @Test
     fun throwExceptionForEmptyInput() {
         exceptionRule.expectMessage(EMPTY_INPUT_ERROR_MESSAGE)
         AsciiMapItemSerializer.serializeAsciiMapItems(emptyMap)
+    }
+
+    @Test
+    fun removeBlankRows() {
+        val mapWithoutBlankRows = AsciiMapItemSerializer.removeBlankRows(blankRowMap)
+        assertEquals(properlyFormattedMap.lines(), mapWithoutBlankRows)
+    }
+
+    @Test
+    fun removeEmptyLeadingColumns() {
+        val mapLinesWithoutEmptyLeadingColumns = AsciiMapItemSerializer.getRowsWithoutEmptyLeadingColumns(emptyLeadingColumnsMap.lines())
+        assertEquals(properlyFormattedMap.lines(), mapLinesWithoutEmptyLeadingColumns)
+    }
+
+    @Test
+    fun addTrailingSpacesToMatchLongestRow() {
+        val mapLinesWithEqualRowLengths = AsciiMapItemSerializer.addTrailingSpacesToMatchLongestRow(mapWithVariousRowLengths.lines())
+        assertEquals(mapWithEqualRowLengths.lines(), mapLinesWithEqualRowLengths)
+    }
+
+    @Test
+    fun createAsciiMapItems() {
+        val properlyFormattedMapItems = listOf(
+                AsciiMapItem("@", 0, 0),
+                AsciiMapItem("-", 0, 1),
+                AsciiMapItem("x", 0, 2))
+        assertEquals(properlyFormattedMapItems, AsciiMapItemSerializer.createAsciiMapItems(properlyFormattedMap.lines()))
     }
 
     @Test
@@ -273,6 +318,11 @@ class AsciiMapItemSerializerTest {
     @Test
     fun formatAsciiMapItemsTwo() {
         assertEquals(expectedItemsTwo, AsciiMapItemSerializer.serializeAsciiMapItems(mapTwo))
+    }
+
+    @Test
+    fun longestRowLength() {
+        assertEquals(10, AsciiMapItemSerializer.longestRowLength(mapTwo.lines()))
     }
 
     @Test

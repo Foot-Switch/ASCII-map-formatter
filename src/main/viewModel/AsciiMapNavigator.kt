@@ -16,6 +16,11 @@ class AsciiMapNavigator(asciiMapInput: String) {
 
     private val allMapItems: List<AsciiMapItem> = AsciiMapItemSerializer.serializeAsciiMapItems(asciiMapInput)
 
+    fun printOutput() {
+        println("Letters: ${buildOutput().letters}")
+        print("Path as characters: ${buildOutput().pathAsCharacters}")
+    }
+
     fun buildOutput(): AsciiMapOutput {
         return formatOutputFromItemPath(buildItemPath())
     }

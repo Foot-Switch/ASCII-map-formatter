@@ -1,7 +1,13 @@
-package model
+package view
 
+import model.AsciiMapOutput
+import org.junit.After
+import org.junit.Before
 import utils.AsciiMapErrorFormatter
 import org.junit.Test
+import viewModel.AsciiMapNavigator
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
 import kotlin.test.assertEquals
 
 class AsciiMapTest {
@@ -47,27 +53,64 @@ class AsciiMapTest {
 
     private val expectedOutputThree = AsciiMapOutput("BEEFCAKE", "@---+B||E--+|E|+--F--+|C|||A--|-----K|||+--E--Ex")
 
+
+    private val outContent = ByteArrayOutputStream()
+    private val originalOut = System.out
+
+    @Before
+    fun setUp() {
+        System.setOut(PrintStream(outContent))
+    }
+
     @Test
     fun formatOutputWithoutLetters() {
-        val asciiMap = AsciiMap(mapWithoutLetters)
+        val asciiMap = AsciiMap(AsciiMapNavigator(mapWithoutLetters))
         assertEquals(expectedOutputWithoutLetters, asciiMap.getOutput())
     }
 
     @Test
     fun formatOutputOne() {
-        val asciiMap = AsciiMap(mapOne)
+        val asciiMap = AsciiMap(AsciiMapNavigator(mapOne))
         assertEquals(expectedOutputOne, asciiMap.getOutput())
     }
 
     @Test
     fun formatOutputTwo() {
-        val asciiMap = AsciiMap(mapTwo)
+        val asciiMap = AsciiMap(AsciiMapNavigator(mapTwo))
         assertEquals(expectedOutputTwo, asciiMap.getOutput())
     }
 
     @Test
     fun formatOutputThree() {
-        val asciiMap = AsciiMap(mapThree)
+        val asciiMap = AsciiMap(AsciiMapNavigator(mapThree))
         assertEquals(expectedOutputThree, asciiMap.getOutput())
+    }
+
+    @Test
+    fun printOutputOne() {
+        val asciiMap = AsciiMap(AsciiMapNavigator(mapOne))
+        validateOutput(asciiMap)
+    }
+
+    @Test
+    fun printOutputTwo() {
+        val asciiMap = AsciiMap(AsciiMapNavigator(mapTwo))
+        validateOutput(asciiMap)
+    }
+
+    @Test
+    fun printOutputThree() {
+        val asciiMap = AsciiMap(AsciiMapNavigator(mapThree))
+        validateOutput(asciiMap)
+    }
+
+    private fun validateOutput(asciiMap: AsciiMap) {
+        asciiMap.printOutput()
+        assertEquals("Letters: ${asciiMap.getOutput().letters}\nPath as characters: ${asciiMap.getOutput().pathAsCharacters}", outContent.toString())
+    }
+
+    @After
+    fun tearDown() {
+        System.setOut(originalOut)
     }
 }
