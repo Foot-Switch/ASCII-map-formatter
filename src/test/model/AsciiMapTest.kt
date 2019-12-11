@@ -1,8 +1,6 @@
 package model
 
-import main.model.AsciiMap
-import main.model.AsciiMapOutput
-import main.utils.AsciiMapErrorFormatter
+import utils.AsciiMapErrorFormatter
 import org.junit.Test
 import kotlin.test.assertEquals
 

@@ -1,6 +1,6 @@
-package main.utils
+package utils
 
-import main.model.AsciiMapItem
+import model.AsciiMapItem
 
 object AsciiMapErrorFormatter {
 

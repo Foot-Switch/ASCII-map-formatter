@@ -1,9 +1,9 @@
 package viewModel
 
-import main.model.AsciiMap
-import main.model.AsciiMapItem
-import main.utils.AsciiMapErrorFormatter
-import main.viewModel.AsciiMapNavigator
+import model.AsciiMap
+import model.AsciiMapItem
+import model.AsciiMapOutput
+import utils.AsciiMapErrorFormatter
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -46,6 +46,19 @@ class AsciiMapNavigatorTest {
                     "  x-------+   "
 
     private lateinit var asciiMapNavigator: AsciiMapNavigator
+
+    private val simpleMap = "@-G-G-x"
+    private val simpleMapPath = listOf(
+            AsciiMapItem("@", 0, 0),
+            AsciiMapItem("-", 0, 1),
+            AsciiMapItem("G", 0, 2),
+            AsciiMapItem("-", 0, 3),
+            AsciiMapItem("G", 0, 4),
+            AsciiMapItem("-", 0, 5),
+            AsciiMapItem("x", 0, 6)
+    )
+
+    private val simpleMapOutput = AsciiMapOutput("GG", simpleMap)
 
     @Before
     fun setUp() {
@@ -220,5 +233,31 @@ class AsciiMapNavigatorTest {
         assertTrue(asciiMapNavigator.isLetterItem(AsciiMapItem("a", 0, 0)))
         assertFalse(asciiMapNavigator.isLetterItem(AsciiMapItem("-", 0, 0)))
         assertFalse(asciiMapNavigator.isLetterItem(AsciiMapItem("*", 0, 0)))
+    }
+
+    @Test
+    fun addNextItemToPath() {
+        val asciiMapNavigator = AsciiMapNavigator(simpleMap)
+        val pathSoFar = mutableListOf(simpleMapPath[0], simpleMapPath[1])
+        asciiMapNavigator.addNextItemToPath(simpleMapPath[1], simpleMapPath[2], pathSoFar)
+        assertEquals(simpleMapPath, pathSoFar)
+    }
+
+    @Test
+    fun buildItemPath() {
+        val asciiMapNavigator = AsciiMapNavigator(simpleMap)
+        assertEquals(simpleMapPath, asciiMapNavigator.buildItemPath())
+    }
+
+    @Test
+    fun formatOutputFromItemPath() {
+        val asciiMapNavigator = AsciiMapNavigator(simpleMap)
+        assertEquals(simpleMapOutput, asciiMapNavigator.formatOutputFromItemPath(simpleMapPath))
+    }
+
+    @Test
+    fun buildOutput() {
+        val asciiMapNavigator = AsciiMapNavigator(simpleMap)
+        assertEquals(simpleMapOutput, asciiMapNavigator.buildOutput())
     }
 }

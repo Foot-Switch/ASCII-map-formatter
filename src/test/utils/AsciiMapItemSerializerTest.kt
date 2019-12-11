@@ -1,8 +1,7 @@
 package utils
 
-import main.utils.AsciiMapErrorFormatter.EMPTY_INPUT_ERROR_MESSAGE
-import main.model.AsciiMapItem
-import main.utils.AsciiMapItemSerializer
+import utils.AsciiMapErrorFormatter.EMPTY_INPUT_ERROR_MESSAGE
+import model.AsciiMapItem
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException

@@ -1,7 +1,7 @@
-package main.utils
+package utils
 
-import main.utils.AsciiMapErrorFormatter.EMPTY_INPUT_ERROR_MESSAGE
-import main.model.AsciiMapItem
+import utils.AsciiMapErrorFormatter.EMPTY_INPUT_ERROR_MESSAGE
+import model.AsciiMapItem
 
 object AsciiMapItemSerializer {
 

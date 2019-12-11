@@ -1,9 +1,9 @@
-package main.viewModel
+package viewModel
 
-import main.utils.AsciiMapErrorFormatter
-import main.utils.AsciiMapItemSerializer
-import main.model.AsciiMapItem
-import main.model.AsciiMapOutput
+import utils.AsciiMapErrorFormatter
+import utils.AsciiMapItemSerializer
+import model.AsciiMapItem
+import model.AsciiMapOutput
 
 class AsciiMapNavigator(asciiMapInput: String) {
 
@@ -12,32 +12,36 @@ class AsciiMapNavigator(asciiMapInput: String) {
     private val pathCharacterHorizontal = "-"
     private val pathCharacterVertical = "|"
     private val pathCharacterCorner = "+"
-
     private val unambiguousNumberOfNextItemCandidates = 1
 
     private val allMapItems: List<AsciiMapItem> = AsciiMapItemSerializer.serializeAsciiMapItems(asciiMapInput)
-    private var pathItems = mutableListOf<AsciiMapItem>()
 
-    fun buildItemPath() {
+    fun buildOutput(): AsciiMapOutput {
+        return formatOutputFromItemPath(buildItemPath())
+    }
+
+    fun buildItemPath(): List<AsciiMapItem> {
+        val pathItems = mutableListOf<AsciiMapItem>()
         when {
             !hasExactlyOneStartItem() -> throw Exception(AsciiMapErrorFormatter.START_CHARACTER_ERROR_MESSAGE)
             !hasAtLeastOneEndItem() -> throw Exception(AsciiMapErrorFormatter.END_CHARACTER_ERROR_MESSAGE)
             startIsAmbiguous() -> throw Exception(AsciiMapErrorFormatter.formatPathAmbiguityErrorMessage(findStartItem()))
             else -> {
                 val startItem = allMapItems.find { it.character == startCharacter }
-                addNextItemToPath(null, startItem!!)
+                addNextItemToPath(null, startItem!!, pathItems)
             }
         }
+        return pathItems
     }
 
-    fun addNextItemToPath(previousItem: AsciiMapItem?, currentItem: AsciiMapItem) {
+    fun addNextItemToPath(previousItem: AsciiMapItem?, currentItem: AsciiMapItem, pathItems: MutableList<AsciiMapItem>) {
         pathItems.add(currentItem)
         if (currentItem.character == endCharacter) return
         val nextItem = findNextItem(previousItem, currentItem) ?: return
-        addNextItemToPath(currentItem, nextItem)
+        addNextItemToPath(currentItem, nextItem, pathItems)
     }
 
-    fun formatOutputFromItemPath(): AsciiMapOutput {
+    fun formatOutputFromItemPath(pathItems: List<AsciiMapItem>): AsciiMapOutput {
         val letterItems = mutableListOf<AsciiMapItem>()
         var pathAsCharacters = ""
         pathItems.forEach { asciiMapItem ->
@@ -143,12 +147,6 @@ class AsciiMapNavigator(asciiMapInput: String) {
 
     fun isLetterItem(asciiMapItem: AsciiMapItem) =
             asciiMapItem.character.single().isLetter() && asciiMapItem.character != endCharacter
-
-
-    fun buildOutput(): AsciiMapOutput {
-        buildItemPath()
-        return formatOutputFromItemPath()
-    }
 
     fun findStartItem(): AsciiMapItem {
         val startItem = allMapItems.find { it.character == startCharacter }

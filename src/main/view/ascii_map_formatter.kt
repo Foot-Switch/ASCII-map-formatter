@@ -1,6 +1,6 @@
-package main.view
+package view
 
-import main.model.AsciiMap
+import model.AsciiMap
 import java.io.File
 
 private const val defaultFilePath = "src/main/ascii_map.txt"
